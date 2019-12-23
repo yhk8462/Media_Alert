@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/home"
+        android:title="Home"/>
+    <item
+        android:id="@+id/movie"
+        android:title="Movies"/>
+    <item
+        android:id="@+id/games"
+        android:title="Games"/>
+    <item
+        android:id="@+id/tvshows"
+        android:title="Tv Shows"/>
+    <item
+        android:id="@+id/sub"
+        android:title="Subscription"/>
+</menu>

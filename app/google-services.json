@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "187655807153",
+    "firebase_url": "https://mediaalert-aaa7c.firebaseio.com",
+    "project_id": "mediaalert-aaa7c",
+    "storage_bucket": "mediaalert-aaa7c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:187655807153:android:92b76996cbbdb392950290",
+        "android_client_info": {
+          "package_name": "rmit.ad.mediaalert"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "187655807153-0qine2n9nusdcae2lhfdmkgptljpedis.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "rmit.ad.mediaalert",
+            "certificate_hash": "2e72bfd8f102798b5e9eb0c71faab68d129c0cbb"
+          }
+        },
+        {
+          "client_id": "187655807153-26v1h5pv1ibba2uk2gddule4f3v09eob.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC3ovkjbDD2o_DWJvduwOnTucU48RlOGS8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "187655807153-26v1h5pv1ibba2uk2gddule4f3v09eob.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
