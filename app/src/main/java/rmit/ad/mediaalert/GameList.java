@@ -6,17 +6,19 @@ public class GameList {
     private String company;
     private String platform;
     private String description;
+    private String Image;
 
     public GameList(){
 
     }
 
-    public GameList(String name, String date, String company, String platform, String description) {
+    public GameList(String name, String date, String company, String platform, String description,String image) {
         this.name = name;
         this.date = date;
         this.company = company;
         this.platform = platform;
         this.description = description;
+        Image = image;
     }
 
     public String getName() {
@@ -59,4 +61,11 @@ public class GameList {
         this.description = description;
     }
 
+    public String getImage() {
+        return Image;
+    }
+
+    public void setImage(String image) {
+        Image = image;
+    }
 }
