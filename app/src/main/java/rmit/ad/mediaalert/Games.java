@@ -92,7 +92,13 @@ public class Games extends AppCompatActivity implements NavigationView.OnNavigat
             }
         });
 
-
+        Button button = findViewById(R.id.btnSidebar);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                drawerLayout.openDrawer(Gravity.LEFT);
+            }
+        });
     }
 
     @Override

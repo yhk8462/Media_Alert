@@ -49,7 +49,7 @@
         android:id="@+id/navigationView"
         app:menu="@menu/sidebaritems"
         app:headerLayout="@layout/sidebar"
-        android:background="@color/c3"
+        android:background="@color/c1"
         app:itemTextColor="#FFFF"
         android:layout_gravity="start">
 
