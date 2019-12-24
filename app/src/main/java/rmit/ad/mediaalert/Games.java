@@ -2,6 +2,7 @@ package rmit.ad.mediaalert;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -9,8 +10,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,18 +42,19 @@ public class Games extends AppCompatActivity implements NavigationView.OnNavigat
     DrawerLayout drawerLayout;
     ActionBarDrawerToggle toggle;
     NavigationView navigationView;
-
     private DatabaseReference myRef;
     private FirebaseDatabase firebaseDatabase;
     FirebaseListAdapter adapter;
     ListView gameList;
+    String searchText;
+    EditText editText;
     public ArrayList<String> mGames = new ArrayList<>();
 
 
     @Override
     protected void onStart() {
         super.onStart();
-        adapter.startListening();
+
     }
 
     @Override
@@ -77,13 +81,27 @@ public class Games extends AppCompatActivity implements NavigationView.OnNavigat
                 drawerLayout.openDrawer(Gravity.LEFT);
             }
         });
-
+        loadData(searchText);
+        editText = findViewById(R.id.Search);
+        ImageView btnSearch = findViewById(R.id.btnSearch);
+        btnSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String searchText = editText.getText().toString();
+                Toast.makeText(Games.this, "searching: " + searchText, Toast.LENGTH_SHORT).show();
+                loadData(searchText);
+            }
+        });
+    }
+    public void loadData(String searchText){
         firebaseDatabase = FirebaseDatabase.getInstance();
         myRef = firebaseDatabase.getReference().child("Games");
+        Query query = myRef.orderByChild("name").startAt(searchText).endAt(searchText + "\uf8ff");
+        //myRef = firebaseDatabase.getReference().child("Users").child(key).child(subs);
         gameList = findViewById(R.id.ListView);
         FirebaseListOptions<GameList> options = new FirebaseListOptions.Builder<GameList>()
                 .setLayout(R.layout.game_list)
-                .setQuery(myRef,GameList.class)
+                .setQuery(query,GameList.class)
                 .build();
         adapter = new FirebaseListAdapter(options) {
             @Override
@@ -101,7 +119,7 @@ public class Games extends AppCompatActivity implements NavigationView.OnNavigat
             }
         };
         gameList.setAdapter(adapter);
-
+        adapter.startListening();
 
         /* // -----------------------------------------------------Adding data--------------------------------------------------
         String name ="FINAL FANTASY VII REMAKE";
@@ -114,39 +132,7 @@ public class Games extends AppCompatActivity implements NavigationView.OnNavigat
         myRef.child("4").setValue(games);
         */
 
-        /*
-        //-----------------------------------------------------Getting data--------------------------------------------------
-        firebaseDatabase = FirebaseDatabase.getInstance();
-        myRef = firebaseDatabase.getReference().child("Games");
-        gameList = findViewById(R.id.ListView);
-        myRef= FirebaseDatabase.getInstance().getReference("Games");
-        final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,mGames);
-        gameList.setAdapter(arrayAdapter);
-        myRef.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                GameList value = dataSnapshot.getValue(GameList.class);
-                Log.d(TAG,"value"+value);
-                mGames.add(value.getName() + "\n" + value.getDate());
-                arrayAdapter.notifyDataSetChanged();
-            }
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-            }
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-            }
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-            }
-        });
-         */
-
     }
-
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         switch (menuItem.getItemId()){
