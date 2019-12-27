@@ -31,8 +31,11 @@ public class MovieAdapter extends ArrayAdapter<MovieListObject> {
         }
         ImageView img = (ImageView) convertView.findViewById(R.id.img);
         TextView txt = (TextView) convertView.findViewById(R.id.txt);
-        String display = movieListObject.originalTitle + "\n"+movieListObject.releaseDate;
+        TextView txt2 = (TextView) convertView.findViewById(R.id.txt2);
+        String display = movieListObject.originalTitle;
+        String display2 = movieListObject.releaseDate;
         txt.setText(display);
+        txt2.setText(display2);
         Picasso.with(this.context).load("http://image.tmdb.org/t/p/w185/"+movieListObject.imgURL).into(img);
 
         return convertView;

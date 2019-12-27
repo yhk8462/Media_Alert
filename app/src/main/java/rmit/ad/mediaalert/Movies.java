@@ -13,6 +13,7 @@ import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -33,6 +34,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class Movies extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -51,6 +53,8 @@ public class Movies extends AppCompatActivity implements NavigationView.OnNaviga
     private MovieListObject movieListObject=new MovieListObject("","","");
     private ArrayList<MovieListObject> movieListObjectsList= new ArrayList<MovieListObject>();
     private boolean isStateChange = false;
+    private int curMonth;
+    private int curYear;
 
 
     @SuppressLint("RestrictedApi")
@@ -70,6 +74,9 @@ public class Movies extends AppCompatActivity implements NavigationView.OnNaviga
                 drawerLayout.openDrawer(Gravity.LEFT);
             }
         });
+        Calendar calendar = Calendar.getInstance();
+        curMonth = calendar.get(Calendar.MONTH);
+        curYear = calendar.get(Calendar.YEAR);
         final Handler handler = new Handler();
         listView = (ListView) findViewById(R.id.list);
         Context context = Movies.this;
@@ -97,7 +104,16 @@ public class Movies extends AppCompatActivity implements NavigationView.OnNaviga
             }
         });
 
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                MovieListObject movie = (MovieListObject) parent.getAdapter().getItem(position);
+                Intent intent = new Intent(Movies.this, MoviesDetailActivity.class);
+                intent.putExtra("name",movie.getOriginalTitle());
+                startActivity(intent);
 
+            }
+        });
 
         listView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
@@ -127,7 +143,11 @@ public class Movies extends AppCompatActivity implements NavigationView.OnNaviga
         @Override
         protected Void doInBackground(Void... voids) {
             if(SearchBar.equals("Search Movie")||SearchBar.equals("")) {
-                movie_json_string = HttpHandler.getUpcomingMovies("http://api.themoviedb.org/3/movie/upcoming?api_key=6660760b6f822ad32b1f7ceeb01b906b&page=" + currentPage);
+                if (curMonth>=1&&curMonth<=9){
+                    movie_json_string = HttpHandler.getUpcomingMovies("http://api.themoviedb.org/3/discover/movie?api_key=6660760b6f822ad32b1f7ceeb01b906b&page=" + currentPage + "&primary_release_date.gte=" + curYear + "-0" + curMonth + "-" + "01");
+                }else {
+                    movie_json_string = HttpHandler.getUpcomingMovies("http://api.themoviedb.org/3/discover/movie?api_key=6660760b6f822ad32b1f7ceeb01b906b&page=" + currentPage + "&primary_release_date.gte=" + curYear + "-" + curMonth + "-" + "01");
+                }
             } else {
                 movie_json_string = HttpHandler.getUpcomingMovies("http://api.themoviedb.org/3/search/movie?api_key=6660760b6f822ad32b1f7ceeb01b906b&page=" + currentPage + "&query=" + SearchBar);
             }
@@ -148,7 +168,12 @@ public class Movies extends AppCompatActivity implements NavigationView.OnNaviga
                     String imgURL = movieObject.getString("poster_path");
                     String originalTitle = movieObject.getString("original_title");
                     String releaseDate = movieObject.getString("release_date");
-                    movieListObject = new MovieListObject(imgURL,originalTitle,releaseDate);
+                    String overview = movieObject.getString("overview");
+                    double voteAverage = movieObject.getDouble("vote_average");
+                    String originalLanguage = movieObject.getString("original_language");
+                    int numberID = movieObject.getInt("id");
+                    boolean isAdult = movieObject.getBoolean("adult");
+                    movieListObject = new MovieListObject(imgURL,originalTitle,releaseDate,numberID,isAdult,originalLanguage,voteAverage,overview);
 
                     movieListObjectsList.add(movieListObject);
 
