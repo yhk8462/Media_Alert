@@ -109,7 +109,14 @@ public class Movies extends AppCompatActivity implements NavigationView.OnNaviga
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 MovieListObject movie = (MovieListObject) parent.getAdapter().getItem(position);
                 Intent intent = new Intent(Movies.this, MoviesDetailActivity.class);
-                intent.putExtra("name",movie.getOriginalTitle());
+                intent.putExtra("title",movie.getOriginalTitle());
+                intent.putExtra("vote",movie.getVoteAverage());
+                intent.putExtra("ID", movie.getNumberID());
+                intent.putExtra("img", movie.getImgURL());
+                intent.putExtra("adult", movie.isAdult());
+                intent.putExtra("releaseDate", movie.getReleaseDate());
+                intent.putExtra("overview", movie.getOverview());
+                intent.putExtra("language", movie.getOriginalLanguage());
                 startActivity(intent);
 
             }
