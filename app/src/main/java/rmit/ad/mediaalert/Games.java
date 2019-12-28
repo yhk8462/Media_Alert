@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -33,6 +34,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -49,19 +51,6 @@ public class Games extends AppCompatActivity implements NavigationView.OnNavigat
     String searchText;
     EditText editText;
     public ArrayList<String> mGames = new ArrayList<>();
-
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        adapter.stopListening();
-    }
 
     @SuppressLint("RestrictedApi")
     @Override
@@ -119,6 +108,22 @@ public class Games extends AppCompatActivity implements NavigationView.OnNavigat
             }
         };
         gameList.setAdapter(adapter);
+        gameList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                GameList list = (GameList) parent.getAdapter().getItem(position);
+                Intent details = new Intent(Games.this, GameDetails.class);
+                details.putExtra("name",list.getName());
+                details.putExtra("date",list.getDate());
+                details.putExtra("company",list.getCompany());
+                details.putExtra("des",list.getDescription());
+                details.putExtra("imageURL",list.getImage());
+                details.putExtra("platform",list.getPlatform());
+                startActivity(details);
+
+            }
+        });
+
         adapter.startListening();
 
         /* // -----------------------------------------------------Adding data--------------------------------------------------
