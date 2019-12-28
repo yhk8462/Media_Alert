@@ -15,8 +15,9 @@
         <ImageView
             android:id="@+id/imageView4"
             android:layout_width="match_parent"
-            android:layout_height="199dp"
+            android:layout_height="159dp"
             android:layout_marginTop="60dp"
+            android:layout_marginBottom="40dp"
             app:srcCompat="@drawable/logo" />
 
         <LinearLayout
@@ -115,5 +116,15 @@
         android:layout_marginLeft="255dp"
         android:layout_marginTop="495dp"
         app:srcCompat="@drawable/sub" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="210dp"
+        android:layout_marginLeft="50dp"
+        android:text="Media Alert"
+        android:textColor="#FFFF"
+        android:textSize="60sp" />
 
 </RelativeLayout>

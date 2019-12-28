@@ -2,6 +2,7 @@ package rmit.ad.mediaalert;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Color;
 import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,6 +16,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SearchView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,7 +41,8 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-public class Games extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class Games extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
+        AdapterView.OnItemSelectedListener {
     private static final String TAG = "Games";
     DrawerLayout drawerLayout;
     ActionBarDrawerToggle toggle;
@@ -63,6 +66,7 @@ public class Games extends AppCompatActivity implements NavigationView.OnNavigat
         navigationView = findViewById(R.id.navigationView);
         navigationView.setNavigationItemSelectedListener(this);
 
+        //Search bar
         Button button = findViewById(R.id.btnSidebar);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,6 +85,69 @@ public class Games extends AppCompatActivity implements NavigationView.OnNavigat
                 loadData(searchText);
             }
         });
+
+        //Spinner
+        Spinner spinner = findViewById(R.id.spinner);
+        ArrayAdapter<CharSequence> adapterM = ArrayAdapter.createFromResource(this,R.array.month,
+                android.R.layout.simple_spinner_item);
+        adapterM.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapterM);
+        spinner.setOnItemSelectedListener(this);
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        String text = parent.getItemAtPosition(position).toString();
+        ((TextView) parent.getChildAt(0)).setTextSize(20);
+        ((TextView) parent.getChildAt(0)).setTextColor(Color.BLUE);
+        loadMonth(text);
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
+    }
+    public void loadMonth(String month){
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        myRef = firebaseDatabase.getReference().child("Games");
+        Query query = myRef.orderByChild("date").startAt(month);
+        //myRef = firebaseDatabase.getReference().child("Users").child(key).child(subs);
+        gameList = findViewById(R.id.ListView);
+        FirebaseListOptions<GameList> options = new FirebaseListOptions.Builder<GameList>()
+                .setLayout(R.layout.game_list)
+                .setQuery(query,GameList.class)
+                .build();
+        adapter = new FirebaseListAdapter(options) {
+            @Override
+            protected void populateView(View v, Object model, int position) {
+                TextView listName = v.findViewById(R.id.listName);
+                TextView listDate = v.findViewById(R.id.listDate);
+                TextView listPlatform = v.findViewById(R.id.listPlatform);
+                ImageView listImage = v.findViewById(R.id.listImage);
+
+                GameList value = (GameList) model;
+                listName.setText(value.getName());
+                listPlatform.setText(value.getPlatform());
+                listDate.setText("Due: "+value.getDate());
+                Picasso.with(Games.this).load(value.getImage()).into(listImage);
+            }
+        };
+        gameList.setAdapter(adapter);
+        gameList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                GameList list = (GameList) parent.getAdapter().getItem(position);
+                Intent details = new Intent(Games.this, GameDetails.class);
+                details.putExtra("name",list.getName());
+                details.putExtra("date",list.getDate());
+                details.putExtra("company",list.getCompany());
+                details.putExtra("des",list.getDescription());
+                details.putExtra("imageURL",list.getImage());
+                details.putExtra("platform",list.getPlatform());
+                startActivity(details);
+            }
+        });
+        adapter.startListening();
     }
     public void loadData(String searchText){
         firebaseDatabase = FirebaseDatabase.getInstance();
@@ -120,24 +187,11 @@ public class Games extends AppCompatActivity implements NavigationView.OnNavigat
                 details.putExtra("imageURL",list.getImage());
                 details.putExtra("platform",list.getPlatform());
                 startActivity(details);
-
             }
         });
-
         adapter.startListening();
-
-        /* // -----------------------------------------------------Adding data--------------------------------------------------
-        String name ="FINAL FANTASY VII REMAKE";
-        String date ="March 3, 2020";
-        String company="Square Enix";
-        String platform = "PS4";
-        String description = "This looks like one of the most glorious nostalgia bombs of all time. Unlike the various rezzed-up Final Fantasy remasters of the past, Final Fantasy VII Remake is a proper, modern reworking of one of the most iconic role-playing games of all time. The trailers look stunning, capturing the essence of the influential original with the power of the PlayStation 4 – hopefully without losing the weirdness of the PS1 classic. One weird quirk, however: given the immense scale of the game, Square Enix will release it in parts. This initial Remake release will include the part of the game that takes place in Midgar, with the other chunks to release later.";
-        GameList games = new GameList(name, date, company, platform, description);
-        //databaseReference
-        myRef.child("4").setValue(games);
-        */
-
     }
+
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         switch (menuItem.getItemId()){
@@ -169,6 +223,7 @@ public class Games extends AppCompatActivity implements NavigationView.OnNavigat
         }
         return false;
     }
+
 
 
 }
