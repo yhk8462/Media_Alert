@@ -3,6 +3,7 @@ package rmit.ad.mediaalert;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,13 +20,30 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import static android.os.Build.ID;
 
 public class GameDetails extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     DrawerLayout drawerLayout;
     ActionBarDrawerToggle toggle;
     NavigationView navigationView;
-
+    private FirebaseDatabase firebaseDatabase;
+    private DatabaseReference myRef;
+    private GameList gameList;
+    private FirebaseAuth mAuth;
+    private String email="";
+    private String key="";
     @SuppressLint("RestrictedApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +55,7 @@ public class GameDetails extends AppCompatActivity implements NavigationView.OnN
         navigationView = findViewById(R.id.navigationView);
         navigationView.setNavigationItemSelectedListener(this);
 
-        Button button = findViewById(R.id.btnSidebar);
+        final Button button = findViewById(R.id.btnSidebar);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -53,14 +71,15 @@ public class GameDetails extends AppCompatActivity implements NavigationView.OnN
         TextView gameDes = findViewById(R.id.game_des);
         ImageView gameImg = findViewById(R.id.game_image);
 
-        //Get data and display
+        //Get data and display ---------------------------------------------------------------------
         Intent details = getIntent();
-        String name = (String) details.getExtras().get("name");
+        final String name = (String) details.getExtras().get("name");
         String date = (String) details.getExtras().get("date");
         String company = (String) details.getExtras().get("company");
         String des = (String) details.getExtras().get("des");
         String platform = (String) details.getExtras().get("platform");
         String imageURL = (String) details.getExtras().get("imageURL");
+        gameList = new GameList(name, date, company, platform, des, imageURL);
 
         header.setText(name);
         Picasso.with(GameDetails.this).load(imageURL).into(gameImg);
@@ -70,6 +89,91 @@ public class GameDetails extends AppCompatActivity implements NavigationView.OnN
         gamePlatform.setText("Available on: "+"\n"+platform);
         gameDes.setText(des);
 
+        //Subscribe button -------------------------------------------------------------------------
+        mAuth = FirebaseAuth.getInstance();
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        myRef = firebaseDatabase.getReference().child("Games");
+
+        final Handler handler = new Handler();
+        final Button btnSub = findViewById(R.id.button);
+        btnSub.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FirebaseUser firebaseUser = mAuth.getCurrentUser();
+                if (firebaseUser != null){
+                    email = firebaseUser.getEmail();
+                    Toast.makeText(GameDetails.this, "Email: "+email, Toast.LENGTH_SHORT).show();
+                    firebaseDatabase.getReference().child("Users")
+                            .addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                                        User user = ds.getValue(User.class);
+                                        key = ds.getKey();
+                                        if (user.getEmail().equals(email)) {
+                                            break;
+                                        }
+                                    }
+                                }
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
+                                }
+                            });
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            firebaseDatabase.getReference().child("Users").child(key).child("ListOfSubsGames").child(name).setValue(gameList);
+                        }
+                    }, 5000);
+                }
+                btnSub.setVisibility(View.GONE);
+            }
+        });
+        FirebaseUser firebaseUser = mAuth.getCurrentUser();
+        if (firebaseUser!=null) {
+            email = firebaseUser.getEmail();
+            Toast.makeText(GameDetails.this,"Email: "+email,Toast.LENGTH_SHORT).show();
+            firebaseDatabase.getReference().child("Users")
+                    .addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                            for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                                User user = ds.getValue(User.class);
+                                String key = ds.getKey();
+
+                                if (user.getEmail().equals(email)) {
+                                    firebaseDatabase.getReference().child("Users").child(key).child("ListOfSubsGames")
+                                            .addValueEventListener(new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                    for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                                                        Map<String,Object> gameName = (HashMap<String,Object>) dataSnapshot1.getValue();
+                                                        if (gameName.get("name").toString().equals(name)) {
+                                                            btnSub.setVisibility(View.GONE);
+                                                            break;
+                                                        }
+                                                        else {
+                                                            break;
+                                                        }
+                                                    }
+                                                }
+                                                @Override
+                                                public void onCancelled(@NonNull DatabaseError databaseError) {
+                                                }
+                                            });
+                                }
+                                //firebaseDatabase.getReference().child("Users").child(key).child("ListOfSubsMovie").push().child("movieID").setValue(ID);
+                            }
+                        }
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                        }
+                    });
+        }
+        else{
+            btnSub.setVisibility(View.GONE);
+        }
     }
 
     @Override

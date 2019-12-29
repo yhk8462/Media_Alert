@@ -173,34 +173,26 @@ public class MoviesDetailActivity extends AppCompatActivity implements Navigatio
                                                             button1.setVisibility(View.GONE);
                                                             break;
                                                         }
-
                                                     }
                                                 }
-
                                                 @Override
                                                 public void onCancelled(@NonNull DatabaseError databaseError) {
-
                                                 }
                                             });
                                 }
                                 //firebaseDatabase.getReference().child("Users").child(key).child("ListOfSubsMovie").push().child("movieID").setValue(ID);
-
                             }
-
                         }
-
                         @Override
                         public void onCancelled(@NonNull DatabaseError databaseError) {
-
                         }
                     });
-
-
         }
         else{
             button1.setVisibility(View.GONE);
         }
     }
+
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         switch (menuItem.getItemId()){
