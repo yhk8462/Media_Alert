@@ -25,6 +25,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Register extends AppCompatActivity {
 
     private final String TAG = "Register";
@@ -87,19 +90,20 @@ public class Register extends AppCompatActivity {
 
 
     private void saveUserInDb(String uuId,String email,String password,String name,String phone) {
-        User user = new User(email,password,name,phone);
+        List<String> ListOfSubsMovie = new ArrayList<>();
+        User user = new User(email,password,name,phone,ListOfSubsMovie);
         FirebaseDatabase.getInstance().getReference().child("Users").child(uuId).setValue(user);
 
     }
 
     public void create() {
-        String NewEmail, NewPassword;
+        //String NewEmail, NewPassword;
 
         EditText mEmail = findViewById(R.id.edtEmail);
         EditText mPassword = findViewById(R.id.edtPassword);
 
-        NewEmail = mEmail.getText().toString();
-        NewPassword = mPassword.getText().toString();
+        final String NewEmail = mEmail.getText().toString();
+        final String NewPassword = mPassword.getText().toString();
 
         name = findViewById(R.id.edtName);
         phone = findViewById(R.id.edtPhone);
@@ -116,6 +120,8 @@ public class Register extends AppCompatActivity {
                             Log.d(TAG, "createUserWithEmail: success");
                             FirebaseUser user = mAuth.getCurrentUser();
                             //updateUI(user);
+                            String userId = mAuth.getUid();
+                            saveUserInDb(userId,NewEmail,NewPassword,strName,strPhone);
                             Intent intent = new Intent(Register.this, MainActivity.class);
                             startActivity(intent);
 
@@ -126,7 +132,6 @@ public class Register extends AppCompatActivity {
                         }
                     }
                 });
-        String userId = mAuth.getUid();
-        saveUserInDb(userId,NewEmail,NewPassword,strName,strPhone);
+
     }
 }

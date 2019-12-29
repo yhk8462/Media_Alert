@@ -1,12 +1,23 @@
 package rmit.ad.mediaalert;
 
+import java.util.List;
+
 public class User {
     private String email;
     private String password;
     private String name;
     private String phone;
+    private List<String> ListOfSubsMovie;
 
     public  User(){
+    }
+
+    public User(String email, String password, String name, String phone, List<String> listOfSubsMovie) {
+        this.email = email;
+        this.password = password;
+        this.name = name;
+        this.phone = phone;
+        ListOfSubsMovie = listOfSubsMovie;
     }
 
     public User(String email, String password, String name, String phone) {
