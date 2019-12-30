@@ -223,6 +223,11 @@ public class Movies extends AppCompatActivity implements NavigationView.OnNaviga
                 Intent intent5 = new Intent(this,Subs.class);
                 startActivity(intent5);
                 break;
+            case R.id.logout:
+                Toast.makeText(this, "Loggin out", Toast.LENGTH_SHORT).show();
+                Intent intent6 = new Intent(this,Login.class);
+                startActivity(intent6);
+                break;
         }
         return false;
     }

@@ -15,4 +15,7 @@
     <item
         android:id="@+id/sub"
         android:title="Subscription"/>
+    <item
+        android:id="@+id/logout"
+        android:title="Log out"/>
 </menu>
