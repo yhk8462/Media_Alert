@@ -106,7 +106,6 @@ public class MoviesDetailActivity extends AppCompatActivity implements Navigatio
                 FirebaseUser firebaseUser = mAuth.getCurrentUser();
                 if (firebaseUser!=null) {
                     email = firebaseUser.getEmail();
-                    Toast.makeText(MoviesDetailActivity.this,"Email: "+email,Toast.LENGTH_SHORT).show();
                     firebaseDatabase.getReference().child("Users")
                             .addValueEventListener(new ValueEventListener() {
                                 @Override
@@ -118,7 +117,7 @@ public class MoviesDetailActivity extends AppCompatActivity implements Navigatio
                                         key = ds.getKey();
 
                                         if (user.getEmail().equals(email)) {
-                                            break;
+                                            return;
                                         }
                                         //firebaseDatabase.getReference().child("Users").child(key).child("ListOfSubsMovie").push().child("movieID").setValue(ID);
 
@@ -151,7 +150,6 @@ public class MoviesDetailActivity extends AppCompatActivity implements Navigatio
         FirebaseUser firebaseUser = mAuth.getCurrentUser();
         if (firebaseUser!=null) {
             email = firebaseUser.getEmail();
-            Toast.makeText(MoviesDetailActivity.this,"Email: "+email,Toast.LENGTH_SHORT).show();
             firebaseDatabase.getReference().child("Users")
                     .addValueEventListener(new ValueEventListener() {
                         @Override
@@ -170,7 +168,7 @@ public class MoviesDetailActivity extends AppCompatActivity implements Navigatio
                                                         Map<String,Object> movieID = (HashMap<String,Object>) dataSnapshot1.getValue();
                                                         if (Integer.valueOf(movieID.get("movieID").toString()).equals(ID)) {
                                                             button1.setVisibility(View.GONE);
-                                                            break;
+                                                            return;
                                                         }
                                                     }
                                                 }

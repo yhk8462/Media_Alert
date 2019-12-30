@@ -102,16 +102,16 @@ public class GameDetails extends AppCompatActivity implements NavigationView.OnN
                 FirebaseUser firebaseUser = mAuth.getCurrentUser();
                 if (firebaseUser != null){
                     email = firebaseUser.getEmail();
-                    Toast.makeText(GameDetails.this, "Email: "+email, Toast.LENGTH_SHORT).show();
                     firebaseDatabase.getReference().child("Users")
                             .addValueEventListener(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                     for (DataSnapshot ds : dataSnapshot.getChildren()) {
                                         User user = ds.getValue(User.class);
-                                        Toast.makeText(GameDetails.this, "User "+user.getEmail(), Toast.LENGTH_SHORT).show();
                                         key = ds.getKey();
-
+                                        if (user.getEmail().equals(email)) {
+                                            return;
+                                        }
                                     }
                                 }
                                 @Override
@@ -127,7 +127,7 @@ public class GameDetails extends AppCompatActivity implements NavigationView.OnN
                 }
             }
         });
-        /*
+
         FirebaseUser firebaseUser = mAuth.getCurrentUser();
         if (firebaseUser!=null) {
             email = firebaseUser.getEmail();
@@ -150,10 +150,7 @@ public class GameDetails extends AppCompatActivity implements NavigationView.OnN
                                                         Map<String,Object> gameName = (HashMap<String,Object>) dataSnapshot1.getValue();
                                                         if (gameName.get("name").toString().equals(name)) {
                                                             btnSub.setVisibility(View.GONE);
-                                                            break;
-                                                        }
-                                                        else {
-                                                            break;
+                                                            return;
                                                         }
                                                     }
                                                 }
@@ -174,7 +171,7 @@ public class GameDetails extends AppCompatActivity implements NavigationView.OnN
             btnSub.setVisibility(View.GONE);
         }
 
-         */
+
     }
 
     @Override
