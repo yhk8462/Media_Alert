@@ -7,17 +7,8 @@ public class User {
     private String password;
     private String name;
     private String phone;
-    private List<String> ListOfSubsMovie;
 
     public  User(){
-    }
-
-    public User(String email, String password, String name, String phone, List<String> listOfSubsMovie) {
-        this.email = email;
-        this.password = password;
-        this.name = name;
-        this.phone = phone;
-        ListOfSubsMovie = listOfSubsMovie;
     }
 
     public User(String email, String password, String name, String phone) {
@@ -26,6 +17,7 @@ public class User {
         this.name = name;
         this.phone = phone;
     }
+
 
     public String getEmail() {
         return email;

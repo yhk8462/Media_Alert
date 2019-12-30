@@ -220,7 +220,7 @@ public class Movies extends AppCompatActivity implements NavigationView.OnNaviga
                 break;
             case R.id.sub:
                 Toast.makeText(this,"sub selected",Toast.LENGTH_SHORT).show();
-                Intent intent5 = new Intent(this,Login.class);
+                Intent intent5 = new Intent(this,Subs.class);
                 startActivity(intent5);
                 break;
         }

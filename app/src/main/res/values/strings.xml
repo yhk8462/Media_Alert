@@ -3,6 +3,7 @@
     <string name="drawerOpen">drawerOpen</string>
     <string name="drawerClose">drawerClose</string>
     <string-array name="month">
+        <item></item>
         <item>January</item>
         <item>February</item>
         <item>March</item>

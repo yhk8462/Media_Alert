@@ -98,14 +98,13 @@ public class Games extends AppCompatActivity implements NavigationView.OnNavigat
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         String text = parent.getItemAtPosition(position).toString();
+        loadMonth(text);
         ((TextView) parent.getChildAt(0)).setTextSize(20);
         ((TextView) parent.getChildAt(0)).setTextColor(Color.BLUE);
-        loadMonth(text);
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
-
     }
     public void loadMonth(String month){
         firebaseDatabase = FirebaseDatabase.getInstance();
@@ -217,7 +216,7 @@ public class Games extends AppCompatActivity implements NavigationView.OnNavigat
                 break;
             case R.id.sub:
                 Toast.makeText(this,"sub selected",Toast.LENGTH_SHORT).show();
-                Intent intent5 = new Intent(this,Login.class);
+                Intent intent5 = new Intent(this,Subs.class);
                 startActivity(intent5);
                 break;
         }

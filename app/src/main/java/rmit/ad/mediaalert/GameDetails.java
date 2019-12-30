@@ -109,10 +109,9 @@ public class GameDetails extends AppCompatActivity implements NavigationView.OnN
                                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                     for (DataSnapshot ds : dataSnapshot.getChildren()) {
                                         User user = ds.getValue(User.class);
+                                        Toast.makeText(GameDetails.this, "User "+user.getEmail(), Toast.LENGTH_SHORT).show();
                                         key = ds.getKey();
-                                        if (user.getEmail().equals(email)) {
-                                            break;
-                                        }
+
                                     }
                                 }
                                 @Override
@@ -126,9 +125,9 @@ public class GameDetails extends AppCompatActivity implements NavigationView.OnN
                         }
                     }, 5000);
                 }
-                btnSub.setVisibility(View.GONE);
             }
         });
+        /*
         FirebaseUser firebaseUser = mAuth.getCurrentUser();
         if (firebaseUser!=null) {
             email = firebaseUser.getEmail();
@@ -174,6 +173,8 @@ public class GameDetails extends AppCompatActivity implements NavigationView.OnN
         else{
             btnSub.setVisibility(View.GONE);
         }
+
+         */
     }
 
     @Override
@@ -201,7 +202,7 @@ public class GameDetails extends AppCompatActivity implements NavigationView.OnN
                 break;
             case R.id.sub:
                 Toast.makeText(this,"sub selected",Toast.LENGTH_SHORT).show();
-                Intent intent5 = new Intent(this,Login.class);
+                Intent intent5 = new Intent(this,Subs.class);
                 startActivity(intent5);
                 break;
         }
