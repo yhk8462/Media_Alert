@@ -10,6 +10,8 @@ import android.widget.Button;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import rmit.ad.mediaalert.tvShows.TvShowActivity;
+
 public class MainActivity extends AppCompatActivity {
     Button btnMovie,btnGame,btnTv,btnSub;
     @Override
@@ -42,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
         btnTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent3 = new Intent(MainActivity.this,TvShows.class);
+                Intent intent3 = new Intent(MainActivity.this, TvShowActivity.class);
                 startActivity(intent3);
             }
         });
