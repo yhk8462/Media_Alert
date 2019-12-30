@@ -43,7 +43,6 @@ import java.util.ArrayList;
 
 public class Games extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
         AdapterView.OnItemSelectedListener {
-    private static final String TAG = "Games";
     DrawerLayout drawerLayout;
     ActionBarDrawerToggle toggle;
     NavigationView navigationView;
