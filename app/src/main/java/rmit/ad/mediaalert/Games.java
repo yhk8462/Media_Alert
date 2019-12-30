@@ -105,6 +105,8 @@ public class Games extends AppCompatActivity implements NavigationView.OnNavigat
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
     }
+
+    // for loading data ------------------------------------------------------------------------------
     public void loadMonth(String month){
         firebaseDatabase = FirebaseDatabase.getInstance();
         myRef = firebaseDatabase.getReference().child("Games");

@@ -10,4 +10,9 @@
         <item>April</item>
         <item>May</item>
     </string-array>
+    <string-array name="subs">
+        <item>Games</item>
+        <item>Movies</item>
+        <item>Tv Shows</item>
+    </string-array>
 </resources>
