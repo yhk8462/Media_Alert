@@ -110,10 +110,10 @@ public class Games extends AppCompatActivity implements NavigationView.OnNavigat
     public void loadMonth(String month){
         firebaseDatabase = FirebaseDatabase.getInstance();
         myRef = firebaseDatabase.getReference().child("Games");
-        Query query = myRef.orderByChild("date").startAt(month);
+        final Query query = myRef.orderByChild("date").startAt(month);
         //myRef = firebaseDatabase.getReference().child("Users").child(key).child(subs);
         gameList = findViewById(R.id.ListView);
-        FirebaseListOptions<GameList> options = new FirebaseListOptions.Builder<GameList>()
+        final FirebaseListOptions<GameList> options = new FirebaseListOptions.Builder<GameList>()
                 .setLayout(R.layout.game_list)
                 .setQuery(query,GameList.class)
                 .build();
