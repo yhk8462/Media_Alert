@@ -43,7 +43,6 @@ import java.util.ArrayList;
 
 public class Games extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
         AdapterView.OnItemSelectedListener {
-    private static final String TAG = "Games";
     DrawerLayout drawerLayout;
     ActionBarDrawerToggle toggle;
     NavigationView navigationView;
@@ -98,15 +97,16 @@ public class Games extends AppCompatActivity implements NavigationView.OnNavigat
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         String text = parent.getItemAtPosition(position).toString();
+        loadMonth(text);
         ((TextView) parent.getChildAt(0)).setTextSize(20);
         ((TextView) parent.getChildAt(0)).setTextColor(Color.BLUE);
-        loadMonth(text);
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
-
     }
+
+    // for loading data ------------------------------------------------------------------------------
     public void loadMonth(String month){
         firebaseDatabase = FirebaseDatabase.getInstance();
         myRef = firebaseDatabase.getReference().child("Games");
@@ -217,8 +217,13 @@ public class Games extends AppCompatActivity implements NavigationView.OnNavigat
                 break;
             case R.id.sub:
                 Toast.makeText(this,"sub selected",Toast.LENGTH_SHORT).show();
-                Intent intent5 = new Intent(this,Login.class);
+                Intent intent5 = new Intent(this,Subs.class);
                 startActivity(intent5);
+                break;
+            case R.id.logout:
+                Toast.makeText(this, "Loggin out", Toast.LENGTH_SHORT).show();
+                Intent intent6 = new Intent(this,Login.class);
+                startActivity(intent6);
                 break;
         }
         return false;

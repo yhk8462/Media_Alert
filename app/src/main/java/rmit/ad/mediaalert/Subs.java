@@ -8,9 +8,13 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -19,20 +23,30 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import com.firebase.ui.database.FirebaseListAdapter;
+import com.firebase.ui.database.FirebaseListOptions;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-public class Subs extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class Subs extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, AdapterView.OnItemSelectedListener {
     DrawerLayout drawerLayout;
     ActionBarDrawerToggle toggle;
     NavigationView navigationView;
-
+    private DatabaseReference myRef;
+    private FirebaseDatabase firebaseDatabase;
+    private FirebaseAuth mAuth;
+    FirebaseListAdapter adapter;
+    ListView gameList;
     @SuppressLint("RestrictedApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,8 +65,77 @@ public class Subs extends AppCompatActivity implements NavigationView.OnNavigati
                 drawerLayout.openDrawer(Gravity.LEFT);
             }
         });
+
+
+        //Spinner
+        Spinner spinner = findViewById(R.id.spinner);
+        ArrayAdapter<CharSequence> adapterM = ArrayAdapter.createFromResource(this,R.array.subs,
+                android.R.layout.simple_spinner_item);
+        adapterM.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapterM);
+        spinner.setOnItemSelectedListener(this);
+
+    }
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        ((TextView) parent.getChildAt(0)).setTextSize(20);
+        String text = parent.getItemAtPosition(position).toString();
+        Toast.makeText(this, ""+text, Toast.LENGTH_SHORT).show();
+        if(text.equals("Games"))
+        {
+            gameAdapter();
+        }
     }
 
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
+    }
+
+    public void gameAdapter(){
+        mAuth = FirebaseAuth.getInstance();
+        FirebaseUser firebaseUser = mAuth.getCurrentUser();
+        String uid = firebaseUser.getUid();
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        myRef = firebaseDatabase.getReference().child("Users").child(uid).child("ListOfSubsGames");
+        gameList = findViewById(R.id.ListView);
+        FirebaseListOptions<GameList> options = new FirebaseListOptions.Builder<GameList>()
+                .setLayout(R.layout.game_list)
+                .setQuery(myRef,GameList.class)
+                .build();
+        adapter = new FirebaseListAdapter(options) {
+            @Override
+            protected void populateView(View v, Object model, int position) {
+                TextView listName = v.findViewById(R.id.listName);
+                TextView listDate = v.findViewById(R.id.listDate);
+                TextView listPlatform = v.findViewById(R.id.listPlatform);
+                ImageView listImage = v.findViewById(R.id.listImage);
+
+                GameList value = (GameList) model;
+                listName.setText(value.getName());
+                listPlatform.setText(value.getPlatform());
+                listDate.setText("Due: "+value.getDate());
+                Picasso.with(Subs.this).load(value.getImage()).into(listImage);
+            }
+        };
+        gameList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                GameList list = (GameList) parent.getAdapter().getItem(position);
+                Intent details = new Intent(Subs.this, GameDetails.class);
+                details.putExtra("name",list.getName());
+                details.putExtra("date",list.getDate());
+                details.putExtra("company",list.getCompany());
+                details.putExtra("des",list.getDescription());
+                details.putExtra("imageURL",list.getImage());
+                details.putExtra("platform",list.getPlatform());
+                startActivity(details);
+            }
+        });
+
+        gameList.setAdapter(adapter);
+        adapter.startListening();
+    }
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         switch (menuItem.getItemId()){
@@ -78,12 +161,18 @@ public class Subs extends AppCompatActivity implements NavigationView.OnNavigati
                 break;
             case R.id.sub:
                 Toast.makeText(this,"sub selected",Toast.LENGTH_SHORT).show();
-                Intent intent5 = new Intent(this,Login.class);
+                Intent intent5 = new Intent(this,Subs.class);
                 startActivity(intent5);
+                break;
+            case R.id.logout:
+                Toast.makeText(this, "Loggin out", Toast.LENGTH_SHORT).show();
+                Intent intent6 = new Intent(this,Login.class);
+                startActivity(intent6);
                 break;
         }
         return false;
     }
+
 
 
 }

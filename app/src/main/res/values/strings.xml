@@ -3,10 +3,16 @@
     <string name="drawerOpen">drawerOpen</string>
     <string name="drawerClose">drawerClose</string>
     <string-array name="month">
+        <item></item>
         <item>January</item>
         <item>February</item>
         <item>March</item>
         <item>April</item>
         <item>May</item>
+    </string-array>
+    <string-array name="subs">
+        <item>Games</item>
+        <item>Movies</item>
+        <item>Tv Shows</item>
     </string-array>
 </resources>
