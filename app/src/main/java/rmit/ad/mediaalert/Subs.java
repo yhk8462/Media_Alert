@@ -81,9 +81,12 @@ public class Subs extends AppCompatActivity implements NavigationView.OnNavigati
         ((TextView) parent.getChildAt(0)).setTextSize(20);
         String text = parent.getItemAtPosition(position).toString();
         Toast.makeText(this, ""+text, Toast.LENGTH_SHORT).show();
-        if(text.equals("Games"))
-        {
+        if(text.equals("Games")) {
             gameAdapter();
+        } else if (text.equals("Movies")){
+            //Movie adapter
+        } else if (text.equals("Tv Shows")){
+            //Tv adapter
         }
     }
 

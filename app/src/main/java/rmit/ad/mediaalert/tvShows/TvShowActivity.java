@@ -40,6 +40,7 @@ import rmit.ad.mediaalert.Login;
 import rmit.ad.mediaalert.MainActivity;
 import rmit.ad.mediaalert.Movies;
 import rmit.ad.mediaalert.R;
+import rmit.ad.mediaalert.Subs;
 import rmit.ad.mediaalert.TvShows;
 
 public class TvShowActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
@@ -303,13 +304,13 @@ public class TvShowActivity extends AppCompatActivity implements NavigationView.
                 startActivity(intent4);
                 break;
             case R.id.sub:
-                Toast.makeText(this, "sub selected", Toast.LENGTH_SHORT).show();
-                Intent intent5 = new Intent(this, Login.class);
+                Toast.makeText(this,"sub selected",Toast.LENGTH_SHORT).show();
+                Intent intent5 = new Intent(this, Subs.class);
                 startActivity(intent5);
                 break;
-            case R.id.manage:
-                Toast.makeText(this, "Manage selected", Toast.LENGTH_SHORT).show();
-                Intent intent6 = new Intent(this, Login.class);
+            case R.id.logout:
+                Toast.makeText(this, "Loggin out", Toast.LENGTH_SHORT).show();
+                Intent intent6 = new Intent(this,Login.class);
                 startActivity(intent6);
                 break;
         }
