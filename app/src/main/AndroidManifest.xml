@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -31,6 +32,10 @@
         <activity android:name=".Register" />
         <activity android:name=".Subs" />
         <activity android:name="GameDetails"/>
+        <activity android:name=".admin.AdminLogin"/>
+        <activity android:name=".admin.AdminHomePage"/>
+        <activity android:name=".admin.AddTvShowActivity"/>
+        <activity android:name=".tvShows.TvShowActivity" />
     </application>
 
 </manifest>

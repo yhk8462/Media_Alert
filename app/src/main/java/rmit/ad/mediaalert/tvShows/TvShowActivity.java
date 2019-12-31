@@ -101,9 +101,6 @@ public class TvShowActivity extends AppCompatActivity implements NavigationView.
             Log.d(TAG, "Error occurred while loading tv shows.");
         }
 
-
-
-
         editText = findViewById(R.id.Search);
         ImageView btnSearch = findViewById(R.id.btnSearch);
         btnSearch.setOnClickListener(new View.OnClickListener() {
@@ -111,7 +108,11 @@ public class TvShowActivity extends AppCompatActivity implements NavigationView.
             public void onClick(View v) {
                 String searchText = editText.getText().toString();
                 Toast.makeText(TvShowActivity.this, "searching: " + searchText, Toast.LENGTH_SHORT).show();
-                //loadData(searchText);
+                try {
+                    searchTvShows(searchText);
+                } catch (Exception ex) {
+                    Log.d(TAG, "Error occurred while searching tv shows.");
+                }
             }
         });
 
@@ -137,8 +138,71 @@ public class TvShowActivity extends AppCompatActivity implements NavigationView.
 
     }
 
+    private void clearList(){
+        tvShowsTomorrow.clear();
+        tvShowsNextWeek.clear();
+        tvShowsLater.clear();
+    }
 
-    public void loadTvShows() {
+    private void searchTvShows(final String searchText) {
+        clearList();
+        if(searchText == null || searchText.equals("")){
+            loadTvShows();
+            return;
+        }
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        myRef = firebaseDatabase.getReference().child("TvShows");
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    TvShowItem tvShowItem = postSnapshot.getValue(TvShowItem.class);
+
+                    if(!tvShowItem.getName().toLowerCase().contains(searchText.toLowerCase())){
+                        continue;
+                    }
+
+                    Calendar calendar = Calendar.getInstance();
+                    Date today = calendar.getTime();
+                    calendar.add(Calendar.DAY_OF_YEAR, 1);
+                    Date tomorrow = calendar.getTime();
+
+                    SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
+                    String tomorrowDateFormatted = format1.format(tomorrow);
+
+                    if (tvShowItem.getReleaseDate().equals(tomorrowDateFormatted)) {
+                        tvShowsTomorrow.add(tvShowItem);
+                        continue;
+                    }
+                    Date releaseDate = null;
+                    try {
+                        releaseDate = format1.parse(tvShowItem.getReleaseDate());
+                    } catch (Exception ex) {
+                        Log.d(TAG, "Exception occurred while parsing the date");
+                    }
+
+                    calendar.add(Calendar.DATE, 7);
+
+                    if (releaseDate.after(new Date()) && releaseDate.before(calendar.getTime())) {
+                        tvShowsNextWeek.add(tvShowItem);
+                        continue;
+                    }
+
+                    tvShowsLater.add(tvShowItem);
+                }
+
+                populateListView();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void loadTvShows() {
+        clearList();
         firebaseDatabase = FirebaseDatabase.getInstance();
         myRef = firebaseDatabase.getReference().child("TvShows");
         myRef.addValueEventListener(new ValueEventListener() {
@@ -175,32 +239,7 @@ public class TvShowActivity extends AppCompatActivity implements NavigationView.
                     tvShowsLater.add(tvShowItem);
                 }
 
-                if (tvShowsTomorrow.isEmpty()) {
-                    tomorrowView.setVisibility(View.INVISIBLE);
-                    tomorrowHeader.setVisibility(View.INVISIBLE);
-                } else {
-                    tomorrowView.setVisibility(View.VISIBLE);
-                    tomorrowHeader.setVisibility(View.VISIBLE);
-                    tomorrowView.setAdapter(new TvShowAdapter(TvShowActivity.this, tvShowsTomorrow));
-                }
-
-                if (tvShowsNextWeek.isEmpty()) {
-                    nextWeekView.setVisibility(View.INVISIBLE);
-                    nextWeekHeader.setVisibility(View.INVISIBLE);
-                } else {
-                    nextWeekView.setVisibility(View.VISIBLE);
-                    nextWeekHeader.setVisibility(View.VISIBLE);
-                    nextWeekView.setAdapter(new TvShowAdapter(TvShowActivity.this, tvShowsNextWeek));
-                }
-
-                if (tvShowsLater.isEmpty()) {
-                    laterView.setVisibility(View.INVISIBLE);
-                    laterHeader.setVisibility(View.INVISIBLE);
-                } else {
-                    laterView.setVisibility(View.VISIBLE);
-                    laterHeader.setVisibility(View.VISIBLE);
-                    laterView.setAdapter(new TvShowAdapter(TvShowActivity.this, tvShowsLater));
-                }
+                populateListView();
             }
 
             @Override
@@ -209,8 +248,35 @@ public class TvShowActivity extends AppCompatActivity implements NavigationView.
             }
         });
 
+    }
 
+    private  void populateListView(){
+        if (tvShowsTomorrow.isEmpty()) {
+            tomorrowView.setVisibility(View.INVISIBLE);
+            tomorrowHeader.setVisibility(View.INVISIBLE);
+        } else {
+            tomorrowView.setVisibility(View.VISIBLE);
+            tomorrowHeader.setVisibility(View.VISIBLE);
+            tomorrowView.setAdapter(new TvShowAdapter(TvShowActivity.this, tvShowsTomorrow));
+        }
 
+        if (tvShowsNextWeek.isEmpty()) {
+            nextWeekView.setVisibility(View.INVISIBLE);
+            nextWeekHeader.setVisibility(View.INVISIBLE);
+        } else {
+            nextWeekView.setVisibility(View.VISIBLE);
+            nextWeekHeader.setVisibility(View.VISIBLE);
+            nextWeekView.setAdapter(new TvShowAdapter(TvShowActivity.this, tvShowsNextWeek));
+        }
+
+        if (tvShowsLater.isEmpty()) {
+            laterView.setVisibility(View.INVISIBLE);
+            laterHeader.setVisibility(View.INVISIBLE);
+        } else {
+            laterView.setVisibility(View.VISIBLE);
+            laterHeader.setVisibility(View.VISIBLE);
+            laterView.setAdapter(new TvShowAdapter(TvShowActivity.this, tvShowsLater));
+        }
     }
 
     @Override
@@ -240,6 +306,11 @@ public class TvShowActivity extends AppCompatActivity implements NavigationView.
                 Toast.makeText(this, "sub selected", Toast.LENGTH_SHORT).show();
                 Intent intent5 = new Intent(this, Login.class);
                 startActivity(intent5);
+                break;
+            case R.id.manage:
+                Toast.makeText(this, "Manage selected", Toast.LENGTH_SHORT).show();
+                Intent intent6 = new Intent(this, Login.class);
+                startActivity(intent6);
                 break;
         }
         return false;

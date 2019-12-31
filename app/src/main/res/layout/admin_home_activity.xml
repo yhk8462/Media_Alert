@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".admin.AdminHomePage">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/background"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/imageView4"
+            android:layout_width="match_parent"
+            android:layout_height="159dp"
+            android:layout_marginTop="60dp"
+            android:layout_marginBottom="40dp"
+            app:srcCompat="@drawable/logo" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="40dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btnMovie"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:gravity="bottom|center"
+                android:paddingBottom="20dp"
+                android:background="@drawable/corners2"
+                android:text="Add Movies" />
+
+            <Space
+                android:layout_width="10dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <Button
+                android:id="@+id/btnGame"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:gravity="bottom|center"
+                android:paddingBottom="20dp"
+                android:background="@drawable/corners2"
+                android:text="Add Games" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btnTv"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:gravity="bottom|center"
+                android:paddingBottom="20dp"
+                android:background="@drawable/corners2"
+                android:text="Add Tv Shows" />
+
+            <Space
+                android:layout_width="10dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <Button
+                android:id="@+id/btnSignOut"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:gravity="bottom|center"
+                android:paddingBottom="20dp"
+                android:background="@drawable/corners2"
+                android:text="Signout" />
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginTop="320dp"
+        android:layout_marginLeft="85dp"
+        app:srcCompat="@drawable/movie" />
+
+    <ImageView
+        android:id="@+id/imageView5"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginLeft="85dp"
+        android:layout_marginTop="480dp"
+        app:srcCompat="@drawable/television" />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="80dp"
+        android:layout_height="100dp"
+        android:layout_marginLeft="248dp"
+        android:layout_marginTop="320dp"
+        app:srcCompat="@drawable/game" />
+
+    <ImageView
+        android:id="@+id/imageViewSignout"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginLeft="255dp"
+        android:layout_marginTop="495dp"
+
+        app:srcCompat="@drawable/signout" />
+
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="210dp"
+        android:layout_marginLeft="50dp"
+        android:text="Media Alert"
+        android:textColor="#FFFF"
+        android:textSize="60sp" />
+
+</RelativeLayout>
