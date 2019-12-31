@@ -81,10 +81,9 @@ public class Subs extends AppCompatActivity implements NavigationView.OnNavigati
         ((TextView) parent.getChildAt(0)).setTextSize(20);
         String text = parent.getItemAtPosition(position).toString();
         Toast.makeText(this, ""+text, Toast.LENGTH_SHORT).show();
-        if (text == "Games") {
+        if(text.equals("Games"))
+        {
             gameAdapter();
-        } else {
-            Toast.makeText(this, "No subs", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -92,6 +91,7 @@ public class Subs extends AppCompatActivity implements NavigationView.OnNavigati
     public void onNothingSelected(AdapterView<?> parent) {
 
     }
+
     public void gameAdapter(){
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser firebaseUser = mAuth.getCurrentUser();
