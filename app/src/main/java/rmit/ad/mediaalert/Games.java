@@ -80,7 +80,6 @@ public class Games extends AppCompatActivity implements NavigationView.OnNavigat
             @Override
             public void onClick(View v) {
                 String searchText = editText.getText().toString();
-                Toast.makeText(Games.this, "searching: " + searchText, Toast.LENGTH_SHORT).show();
                 loadData(searchText);
             }
         });
