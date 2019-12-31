@@ -307,11 +307,6 @@ public class TvShowActivity extends AppCompatActivity implements NavigationView.
                 Intent intent5 = new Intent(this, Login.class);
                 startActivity(intent5);
                 break;
-            case R.id.manage:
-                Toast.makeText(this, "Manage selected", Toast.LENGTH_SHORT).show();
-                Intent intent6 = new Intent(this, Login.class);
-                startActivity(intent6);
-                break;
         }
         return false;
     }
