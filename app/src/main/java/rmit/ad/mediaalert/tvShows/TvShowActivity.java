@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
@@ -62,8 +64,14 @@ public class TvShowActivity extends AppCompatActivity implements NavigationView.
     TextView laterHeader;
     String searchText;
     EditText editText;
+    Spinner spinner;
     private DatabaseReference myRef;
     private FirebaseDatabase firebaseDatabase;
+
+    public static String theMonth(int month) {
+        String[] monthNames = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
+        return monthNames[month];
+    }
 
     @SuppressLint("RestrictedApi")
     @Override
@@ -104,35 +112,48 @@ public class TvShowActivity extends AppCompatActivity implements NavigationView.
         }
 
         editText = findViewById(R.id.Search);
-        ImageView btnSearch = findViewById(R.id.btnSearch);
-        btnSearch.setOnClickListener(new View.OnClickListener() {
+
+        editText.addTextChangedListener(new TextWatcher() {
             @Override
-            public void onClick(View v) {
-                String searchText = editText.getText().toString();
-                Toast.makeText(TvShowActivity.this, "searching: " + searchText, Toast.LENGTH_SHORT).show();
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
                 try {
-                    searchTvShows(searchText);
+                    searchTvShows(s.toString());
                 } catch (Exception ex) {
                     Log.d(TAG, "Error occurred while searching tv shows.");
                 }
             }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
         });
 
         //Spinner
-        Spinner spinner = findViewById(R.id.spinner);
+        spinner = findViewById(R.id.spinner);
         ArrayAdapter<CharSequence> adapterM = ArrayAdapter.createFromResource(this, R.array.month,
                 android.R.layout.simple_spinner_item);
         adapterM.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapterM);
         spinner.setOnItemSelectedListener(this);
+        spinner.setSelection(0,false);
     }
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        String text = parent.getItemAtPosition(position).toString();
-        ((TextView) parent.getChildAt(0)).setTextSize(20);
-        ((TextView) parent.getChildAt(0)).setTextColor(Color.BLUE);
-      //  loadMonth(text);
+        if (spinner.getSelectedItemPosition() != 0) {
+            String text = parent.getItemAtPosition(position).toString();
+            ((TextView) parent.getChildAt(0)).setTextSize(20);
+            ((TextView) parent.getChildAt(0)).setTextColor(Color.BLUE);
+            loadByMonth(text);
+        }
+
     }
 
     @Override
@@ -140,7 +161,7 @@ public class TvShowActivity extends AppCompatActivity implements NavigationView.
 
     }
 
-    private void clearList(){
+    private void clearList() {
         tvShowsTomorrow.clear();
         tvShowsNextWeek.clear();
         tvShowsLater.clear();
@@ -148,7 +169,7 @@ public class TvShowActivity extends AppCompatActivity implements NavigationView.
 
     private void searchTvShows(final String searchText) {
         clearList();
-        if(searchText == null || searchText.equals("")){
+        if (searchText == null || searchText.equals("")) {
             loadTvShows();
             return;
         }
@@ -160,7 +181,7 @@ public class TvShowActivity extends AppCompatActivity implements NavigationView.
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     TvShowItem tvShowItem = postSnapshot.getValue(TvShowItem.class);
 
-                    if(!tvShowItem.getName().toLowerCase().contains(searchText.toLowerCase())){
+                    if (!tvShowItem.getName().toLowerCase().contains(searchText.toLowerCase())) {
                         continue;
                     }
 
@@ -172,17 +193,86 @@ public class TvShowActivity extends AppCompatActivity implements NavigationView.
                     SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
                     String tomorrowDateFormatted = format1.format(tomorrow);
 
-                    try{
-                        Date relDate =  format1.parse(tvShowItem.getReleaseDate());
+                    try {
+                        Date relDate = format1.parse(tvShowItem.getReleaseDate());
                         // Do not list previously released TV shows
-                        if(relDate.before(new Date())){
+                        if (relDate.before(new Date())) {
                             continue;
                         }
-                    } catch (Exception ex){
+                    } catch (Exception ex) {
                         Log.d(TAG, "Exception occurred while parsing the date");
                     }
 
 
+                    if (tvShowItem.getReleaseDate().equals(tomorrowDateFormatted)) {
+                        tvShowsTomorrow.add(tvShowItem);
+                        continue;
+                    }
+                    Date releaseDate = null;
+                    try {
+                        releaseDate = format1.parse(tvShowItem.getReleaseDate());
+                    } catch (Exception ex) {
+                        Log.d(TAG, "Exception occurred while parsing the date");
+                    }
+
+                    calendar.add(Calendar.DATE, 7);
+
+                    if (releaseDate.after(new Date()) && releaseDate.before(calendar.getTime())) {
+                        tvShowsNextWeek.add(tvShowItem);
+                        continue;
+                    }
+
+                    tvShowsLater.add(tvShowItem);
+                }
+
+                populateListView();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void loadByMonth(final String month) {
+        clearList();
+        if (month == null || month.equals("")) {
+            loadTvShows();
+            return;
+        }
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        myRef = firebaseDatabase.getReference().child("TvShows");
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    TvShowItem tvShowItem = postSnapshot.getValue(TvShowItem.class);
+
+                    Calendar calendar = Calendar.getInstance();
+                    Date today = calendar.getTime();
+                    calendar.add(Calendar.DAY_OF_YEAR, 1);
+                    Date tomorrow = calendar.getTime();
+
+                    SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
+                    String tomorrowDateFormatted = format1.format(tomorrow);
+                    Date relDate = null;
+                    try {
+                        relDate = format1.parse(tvShowItem.getReleaseDate());
+                        // Do not list previously released TV shows
+                        if (relDate.before(new Date())) {
+                            continue;
+                        }
+                    } catch (Exception ex) {
+                        Log.d(TAG, "Exception occurred while parsing the date");
+                    }
+                    Calendar relDatecalendar = Calendar.getInstance();
+                    relDatecalendar.setTime(relDate);
+                    int monthNumber = relDatecalendar.get(Calendar.MONTH);
+
+                    if (!theMonth(monthNumber).toLowerCase().equals(month.toLowerCase())) {
+                        continue;
+                    }
 
                     if (tvShowItem.getReleaseDate().equals(tomorrowDateFormatted)) {
                         tvShowsTomorrow.add(tvShowItem);
@@ -239,7 +329,7 @@ public class TvShowActivity extends AppCompatActivity implements NavigationView.
                     Date releaseDate = null;
                     try {
                         releaseDate = format1.parse(tvShowItem.getReleaseDate());
-                        if(releaseDate.before(new Date())){
+                        if (releaseDate.before(new Date())) {
                             continue;
                         }
                     } catch (Exception ex) {
@@ -267,7 +357,7 @@ public class TvShowActivity extends AppCompatActivity implements NavigationView.
 
     }
 
-    private  void populateListView(){
+    private void populateListView() {
         if (tvShowsTomorrow.isEmpty()) {
             tomorrowView.setVisibility(View.GONE);
             tomorrowHeader.setVisibility(View.GONE);
@@ -324,13 +414,13 @@ public class TvShowActivity extends AppCompatActivity implements NavigationView.
                 startActivity(intent4);
                 break;
             case R.id.sub:
-                Toast.makeText(this,"sub selected",Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "sub selected", Toast.LENGTH_SHORT).show();
                 Intent intent5 = new Intent(this, Subs.class);
                 startActivity(intent5);
                 break;
             case R.id.logout:
                 Toast.makeText(this, "Loggin out", Toast.LENGTH_SHORT).show();
-                Intent intent6 = new Intent(this,Login.class);
+                Intent intent6 = new Intent(this, Login.class);
                 startActivity(intent6);
                 break;
         }
