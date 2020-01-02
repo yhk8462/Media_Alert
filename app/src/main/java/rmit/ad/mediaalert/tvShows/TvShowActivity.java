@@ -42,6 +42,7 @@ import rmit.ad.mediaalert.Movies;
 import rmit.ad.mediaalert.R;
 import rmit.ad.mediaalert.Subs;
 import rmit.ad.mediaalert.TvShows;
+import rmit.ad.mediaalert.admin.ListUtils;
 
 public class TvShowActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
         AdapterView.OnItemSelectedListener {
@@ -171,6 +172,18 @@ public class TvShowActivity extends AppCompatActivity implements NavigationView.
                     SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
                     String tomorrowDateFormatted = format1.format(tomorrow);
 
+                    try{
+                        Date relDate =  format1.parse(tvShowItem.getReleaseDate());
+                        // Do not list previously released TV shows
+                        if(relDate.before(new Date())){
+                            continue;
+                        }
+                    } catch (Exception ex){
+                        Log.d(TAG, "Exception occurred while parsing the date");
+                    }
+
+
+
                     if (tvShowItem.getReleaseDate().equals(tomorrowDateFormatted)) {
                         tvShowsTomorrow.add(tvShowItem);
                         continue;
@@ -226,6 +239,9 @@ public class TvShowActivity extends AppCompatActivity implements NavigationView.
                     Date releaseDate = null;
                     try {
                         releaseDate = format1.parse(tvShowItem.getReleaseDate());
+                        if(releaseDate.before(new Date())){
+                            continue;
+                        }
                     } catch (Exception ex) {
                         Log.d(TAG, "Exception occurred while parsing the date");
                     }
@@ -253,30 +269,34 @@ public class TvShowActivity extends AppCompatActivity implements NavigationView.
 
     private  void populateListView(){
         if (tvShowsTomorrow.isEmpty()) {
-            tomorrowView.setVisibility(View.INVISIBLE);
-            tomorrowHeader.setVisibility(View.INVISIBLE);
+            tomorrowView.setVisibility(View.GONE);
+            tomorrowHeader.setVisibility(View.GONE);
         } else {
             tomorrowView.setVisibility(View.VISIBLE);
             tomorrowHeader.setVisibility(View.VISIBLE);
             tomorrowView.setAdapter(new TvShowAdapter(TvShowActivity.this, tvShowsTomorrow));
+            ListUtils.setDynamicHeight(tomorrowView);
         }
 
         if (tvShowsNextWeek.isEmpty()) {
-            nextWeekView.setVisibility(View.INVISIBLE);
-            nextWeekHeader.setVisibility(View.INVISIBLE);
+            nextWeekView.setVisibility(View.GONE);
+            nextWeekHeader.setVisibility(View.GONE);
+
         } else {
             nextWeekView.setVisibility(View.VISIBLE);
             nextWeekHeader.setVisibility(View.VISIBLE);
             nextWeekView.setAdapter(new TvShowAdapter(TvShowActivity.this, tvShowsNextWeek));
+            ListUtils.setDynamicHeight(nextWeekView);
         }
 
         if (tvShowsLater.isEmpty()) {
-            laterView.setVisibility(View.INVISIBLE);
-            laterHeader.setVisibility(View.INVISIBLE);
+            laterView.setVisibility(View.GONE);
+            laterHeader.setVisibility(View.GONE);
         } else {
             laterView.setVisibility(View.VISIBLE);
             laterHeader.setVisibility(View.VISIBLE);
             laterView.setAdapter(new TvShowAdapter(TvShowActivity.this, tvShowsLater));
+            ListUtils.setDynamicHeight(laterView);
         }
     }
 

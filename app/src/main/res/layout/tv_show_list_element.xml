@@ -1,49 +1,99 @@
 <?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:id="@+id/wrapper"
+    android:padding="0dp"
+    android:layout_height="wrap_content" >
+
 <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/simpleTableLayout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#E8EEF0"
-    android:stretchColumns="1">
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:layout_marginBottom="5dp"
+    >
 
     <TableRow
 
         android:id="@+id/row"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
+        android:background="#8Cffffff"
         android:layout_height="wrap_content">
 
         <!-- first element of the row-->
         <ImageView
             android:id="@+id/img"
             android:layout_width="100dp"
-            android:layout_height="150dp" />
+            android:layout_height="150dp"
+            android:background="@drawable/custom_image_background"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp" />
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_marginLeft="20dp"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/custom_background"
             android:gravity="center"
             android:orientation="vertical">
 
             <TextView
                 android:id="@+id/txtTvShowName"
-                android:layout_width="match_parent"
+                android:layout_width="180dp"
                 android:layout_height="wrap_content"
-                android:text="Name"
+                android:text="Game of Thrones"
+                android:layout_marginLeft="8dp"
                 android:textColor="#000"
-                android:textSize="20dp"
+                android:textSize="18dp"
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/txt2"
+                android:id="@+id/releaseDate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
+                android:layout_marginLeft="8dp"
                 android:text="Date"
                 android:textColor="#041DFF"
                 android:textSize="20dp"
-                android:textStyle="italic" />
+                android:textStyle="italic|bold" />
         </LinearLayout>
+
+        <TableLayout
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:layout_marginRight="10dp"
+            android:background="@android:color/white"
+            android:gravity="center">
+
+            <TableRow>
+
+                <TextView
+                    android:id="@+id/txtDays"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="10"
+                    android:textAlignment="center"
+                    android:textColor="@android:color/black"
+                    android:textSize="30dp"
+                    android:textStyle="bold" />
+            </TableRow>
+
+            <TableRow>
+
+                <TextView
+                    android:id="@+id/lblDaysMore"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Days More"
+                    android:textAlignment="center"
+                    android:layout_marginLeft="2dp"
+                    android:textColor="#9B9999"
+                    android:textSize="15dp" />
+            </TableRow>
+
+        </TableLayout>
 
     </TableRow>
 </TableLayout>
+</LinearLayout>
