@@ -131,7 +131,12 @@ public class Subs extends AppCompatActivity implements NavigationView.OnNavigati
                                             String imgURL = movieObject.get("imgURL").toString();
                                             String title = movieObject.get("originalTitle").toString();
                                             String releaseDate = movieObject.get("releaseDate").toString();
-                                            movieListObject = new MovieListObject(imgURL,title,releaseDate);
+                                            String overview = movieObject.get("overview").toString();
+                                            String originalLanguage = movieObject.get("originalLanguage").toString();
+                                            int numberID = Integer.valueOf(movieObject.get("numberID").toString());
+                                            boolean isAdult = Boolean.valueOf(movieObject.get("adult").toString());
+                                            double voteAverage = Double.valueOf(movieObject.get("voteAverage").toString());
+                                            movieListObject = new MovieListObject(imgURL,title,releaseDate,numberID,isAdult,originalLanguage,voteAverage,overview);
                                             //Toast.makeText(Subs.this,movieListObject.getOriginalTitle(),Toast.LENGTH_SHORT).show();
                                             movieAdapter.add(movieListObject);
                                             return;
@@ -155,6 +160,22 @@ public class Subs extends AppCompatActivity implements NavigationView.OnNavigati
             @Override
             public void run() {
                 gameList.setAdapter(movieAdapter);
+                gameList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        MovieListObject movie = (MovieListObject) parent.getAdapter().getItem(position);
+                        Intent intent = new Intent(Subs.this,SubsMovieDetailsActivity.class);
+                        intent.putExtra("title",movie.getOriginalTitle());
+                        intent.putExtra("vote",movie.getVoteAverage());
+                        intent.putExtra("ID", movie.getNumberID());
+                        intent.putExtra("img", movie.getImgURL());
+                        intent.putExtra("adult", movie.isAdult());
+                        intent.putExtra("releaseDate", movie.getReleaseDate());
+                        intent.putExtra("overview", movie.getOverview());
+                        intent.putExtra("language", movie.getOriginalLanguage());
+                        startActivity(intent);
+                    }
+                });
             }
         },5000);
     }
