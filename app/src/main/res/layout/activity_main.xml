@@ -117,14 +117,4 @@
         android:layout_marginTop="495dp"
         app:srcCompat="@drawable/sub" />
 
-    <TextView
-        android:id="@+id/textView4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="210dp"
-        android:layout_marginLeft="50dp"
-        android:text="Media Alert"
-        android:textColor="#FFFF"
-        android:textSize="60sp" />
-
 </RelativeLayout>
