@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="#FFFFFF"
+    android:orientation="vertical">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="150dp"
+        android:scaleType="centerInside"
+        android:src="@drawable/subbanner" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_gravity="center"
+        android:paddingTop="20dp"
+        android:layout_marginLeft="10dp"
+        android:fontFamily="sans-serif"
+        android:text="You have success fully subscribe to "
+        android:textColor="#090807"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_marginLeft="10dp"
+        android:fontFamily="sans-serif"
+        android:layout_gravity="center"
+        android:padding="5dp"
+        android:text="Friends"
+        android:textStyle="bold"
+        android:textColor="#090807"
+        android:textSize="22sp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_gravity="center"
+        android:fontFamily="sans-serif"
+        android:padding="5dp"
+        android:layout_marginLeft="10dp"
+        android:text="We will notify you with the latest updates!"
+        android:textColor="#090807"
+        android:textSize="18sp" />
+
+</LinearLayout>

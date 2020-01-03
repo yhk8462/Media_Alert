@@ -1,10 +1,7 @@
 package rmit.ad.mediaalert.tvShows;
 
 import android.app.Activity;
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.provider.MediaStore;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,8 +11,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.google.gson.Gson;
-import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -35,6 +30,10 @@ public class TvShowAdapter extends ArrayAdapter<TvShowItem> {
         super(context, 0, tvShowItems);
     }
 
+    public static long getDifferenceDays(Date d1, Date d2) {
+        long diff = d2.getTime() - d1.getTime();
+        return TimeUnit.DAYS.convert(diff +1, TimeUnit.MILLISECONDS);
+    }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -66,11 +65,21 @@ public class TvShowAdapter extends ArrayAdapter<TvShowItem> {
         }
         days.setText(String.valueOf(getDifferenceDays(new Date(), relDate)));
 
-        return tvShowListView;
-    }
+        tvShowListView.setOnClickListener(
+                new View.OnClickListener() {
+                    public void onClick(View v) {
+                        Intent intent = new Intent(getContext(), TvShowDetails.class);
 
-    public static long getDifferenceDays(Date d1, Date d2) {
-        long diff = d2.getTime() - d1.getTime();
-        return TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
+                        intent.putExtra("name", tvShowItem.getName());
+                        intent.putExtra("releaseDate", tvShowItem.getReleaseDate());
+                        intent.putExtra("type", tvShowItem.getTvShowType());
+                        intent.putExtra("description", tvShowItem.getDescription());
+                        intent.putExtra("imageURL", tvShowItem.getImageUrl());
+                        getContext().startActivity(intent);
+                    }
+                }
+        );
+
+        return tvShowListView;
     }
 }
