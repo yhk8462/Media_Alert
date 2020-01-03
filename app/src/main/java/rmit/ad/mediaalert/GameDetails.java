@@ -123,7 +123,7 @@ public class GameDetails extends AppCompatActivity implements NavigationView.OnN
                         public void run() {
                             firebaseDatabase.getReference().child("Users").child(key).child("ListOfSubsGames").child(name).setValue(gameList);
                         }
-                    }, 5000);
+                    }, 1000);
                 }
             }
         });
@@ -131,7 +131,6 @@ public class GameDetails extends AppCompatActivity implements NavigationView.OnN
         FirebaseUser firebaseUser = mAuth.getCurrentUser();
         if (firebaseUser!=null) {
             email = firebaseUser.getEmail();
-            Toast.makeText(GameDetails.this,"Email: "+email,Toast.LENGTH_SHORT).show();
             firebaseDatabase.getReference().child("Users")
                     .addValueEventListener(new ValueEventListener() {
                         @Override

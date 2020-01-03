@@ -182,7 +182,7 @@ public class Subs extends AppCompatActivity implements NavigationView.OnNavigati
     public void gameAdapter(){
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser firebaseUser = mAuth.getCurrentUser();
-        String uid = firebaseUser.getUid();
+        final String uid = firebaseUser.getUid();
         firebaseDatabase = FirebaseDatabase.getInstance();
         myRef = firebaseDatabase.getReference().child("Users").child(uid).child("ListOfSubsGames");
         gameList = findViewById(R.id.ListView);
@@ -209,13 +209,14 @@ public class Subs extends AppCompatActivity implements NavigationView.OnNavigati
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 GameList list = (GameList) parent.getAdapter().getItem(position);
-                Intent details = new Intent(Subs.this, GameDetails.class);
+                Intent details = new Intent(Subs.this, SubGames.class);
                 details.putExtra("name",list.getName());
                 details.putExtra("date",list.getDate());
                 details.putExtra("company",list.getCompany());
                 details.putExtra("des",list.getDescription());
                 details.putExtra("imageURL",list.getImage());
                 details.putExtra("platform",list.getPlatform());
+                details.putExtra("key",uid);
                 startActivity(details);
             }
         });

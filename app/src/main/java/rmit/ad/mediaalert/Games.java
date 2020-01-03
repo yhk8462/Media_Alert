@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.media.Image;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
@@ -43,6 +45,7 @@ import java.util.ArrayList;
 
 public class Games extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
         AdapterView.OnItemSelectedListener {
+    private static final String TAG = "Games";
     DrawerLayout drawerLayout;
     ActionBarDrawerToggle toggle;
     NavigationView navigationView;
@@ -75,15 +78,27 @@ public class Games extends AppCompatActivity implements NavigationView.OnNavigat
         });
         loadData(searchText);
         editText = findViewById(R.id.Search);
-        ImageView btnSearch = findViewById(R.id.btnSearch);
-        btnSearch.setOnClickListener(new View.OnClickListener() {
+        editText.addTextChangedListener(new TextWatcher() {
             @Override
-            public void onClick(View v) {
-                String searchText = editText.getText().toString();
-                loadData(searchText);
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                try {
+                    loadData(s.toString());
+                } catch (Exception ex) {
+                    Log.d(TAG, "Error occurred while searching games.");
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
             }
         });
-
         //Spinner
         Spinner spinner = findViewById(R.id.spinner);
         ArrayAdapter<CharSequence> adapterM = ArrayAdapter.createFromResource(this,R.array.month,
@@ -152,6 +167,7 @@ public class Games extends AppCompatActivity implements NavigationView.OnNavigat
         firebaseDatabase = FirebaseDatabase.getInstance();
         myRef = firebaseDatabase.getReference().child("Games");
         Query query = myRef.orderByChild("name").startAt(searchText).endAt(searchText + "\uf8ff");
+
         //myRef = firebaseDatabase.getReference().child("Users").child(key).child(subs);
         gameList = findViewById(R.id.ListView);
         FirebaseListOptions<GameList> options = new FirebaseListOptions.Builder<GameList>()
@@ -167,6 +183,7 @@ public class Games extends AppCompatActivity implements NavigationView.OnNavigat
                 ImageView listImage = v.findViewById(R.id.listImage);
 
                 GameList value = (GameList) model;
+
                 listName.setText(value.getName());
                 listPlatform.setText(value.getPlatform());
                 listDate.setText("Due: "+value.getDate());
