@@ -35,7 +35,9 @@
         <activity android:name=".admin.AdminHomePage" />
         <activity android:name=".admin.AddTvShowActivity" />
         <activity android:name=".tvShows.TvShowActivity" />
-        <activity android:name=".SubGames" />
+        <activity android:name=".tvShows.TvShowDetails"></activity>
+        <activity android:name=".UnSubscribeDialog"/>
+        <activity android:name=".SubscribeDialog"/>
     </application>
 
 </manifest>
