@@ -2,16 +2,21 @@ package rmit.ad.mediaalert.admin;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,6 +39,7 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -51,6 +57,8 @@ public class AddTvShowActivity extends AppCompatActivity {
     FirebaseStorage storage;
     StorageReference storageReference;
 
+    private Uri filePath;
+
 
     DrawerLayout drawerLayout;
     ActionBarDrawerToggle toggle;
@@ -66,7 +74,7 @@ public class AddTvShowActivity extends AppCompatActivity {
     EditText editText;
     private Button btnChoose, btnUpload;
     private ImageView imageView;
-    private Uri filePath;
+
     private DatabaseReference myRef;
     private FirebaseDatabase firebaseDatabase;
 
@@ -125,6 +133,12 @@ public class AddTvShowActivity extends AppCompatActivity {
 
     }
 
+    private String getFileExtension(Uri uri){
+        ContentResolver contentResolver = getContentResolver();
+        MimeTypeMap mime = MimeTypeMap.getSingleton();
+        return  mime.getExtensionFromMimeType(contentResolver.getType(uri));
+    }
+
     private void uploadImage() {
         //if there is a file to upload
         if (filePath != null) {
@@ -133,40 +147,46 @@ public class AddTvShowActivity extends AppCompatActivity {
             progressDialog.setTitle("Uploading");
             progressDialog.show();
 
-            StorageReference riversRef = storageReference.child("images/pic.jpg");
-            riversRef.putFile(filePath)
-                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            //if the upload is successfull
-                            //hiding the progress dialog
-                            progressDialog.dismiss();
+            StorageReference storageRef = storageReference.child(System.currentTimeMillis() +"." + getFileExtension(filePath));
 
-                            //and displaying a success toast
-                            Toast.makeText(getApplicationContext(), "File Uploaded ", Toast.LENGTH_LONG).show();
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception exception) {
-                            //if the upload is not successfull
-                            //hiding the progress dialog
-                            progressDialog.dismiss();
+            try{
+                InputStream inputStream = this.getContentResolver().openInputStream(filePath);
+               /**
+                UploadTask uploadTask = storageRef.putStream(inputStream);
+                uploadTask.addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        // Handle unsuccessful uploads
+                        progressDialog.dismiss();
 
-                            //and displaying error message
-                            Toast.makeText(getApplicationContext(), exception.getMessage(), Toast.LENGTH_LONG).show();
-                        }
-                    })
-                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                            //calculating progress percentage
-                            double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
+                        Toast.makeText(AddTvShowActivity.this, "Failed "+exception.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        progressDialog.dismiss();
+                        //Log.e(TAG, "Task :" + taskSnapshot.getTask());
 
-                            //displaying percentage in progress dialog
-                            progressDialog.setMessage("Uploaded " + ((int) progress) + "%...");
-                        }
-                    });
+                        //Log.e(TAG, "Class Store:" + taskSnapshot.getStorage().getDownloadUrl());
+                        Log.e(TAG,"metaData :"+taskSnapshot.getMetadata().getPath());
+
+                        // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
+                        // ...
+                    }
+                }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                        double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot
+                                .getTotalByteCount());
+                        progressDialog.setMessage("Uploaded " + (int) progress + "%");
+                    }
+                });
+                */
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+
+
         }
         //if there is not any file
         else {

@@ -76,6 +76,8 @@ public class Movies extends AppCompatActivity implements NavigationView.OnNaviga
         });
         Calendar calendar = Calendar.getInstance();
         curMonth = calendar.get(Calendar.MONTH);
+        curMonth = curMonth+1;
+        //Toast.makeText(Movies.this,String.valueOf(curMonth),Toast.LENGTH_SHORT).show();
         curYear = calendar.get(Calendar.YEAR);
         final Handler handler = new Handler();
         listView = (ListView) findViewById(R.id.list);
@@ -134,7 +136,7 @@ public class Movies extends AppCompatActivity implements NavigationView.OnNaviga
                         if (currentPage<totalPage) {
                             currentPage++;
                             new GetMovies().execute();
-                            Toast.makeText(Movies.this, String.valueOf(currentPage),Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(Movies.this, String.valueOf(currentPage),Toast.LENGTH_SHORT).show();
                         }
                     }
 
@@ -151,7 +153,7 @@ public class Movies extends AppCompatActivity implements NavigationView.OnNaviga
         protected Void doInBackground(Void... voids) {
             if(SearchBar.equals("Search Movie")||SearchBar.equals("")) {
                 if (curMonth>=1&&curMonth<=9){
-                    movie_json_string = HttpHandler.getUpcomingMovies("http://api.themoviedb.org/3/discover/movie?api_key=6660760b6f822ad32b1f7ceeb01b906b&page=" + currentPage + "&primary_release_date.gte=" + curYear + "-0" + curMonth + "-" + "01");
+                    movie_json_string = HttpHandler.getUpcomingMovies("http://api.themoviedb.org/3/discover/movie?api_key=6660760b6f822ad32b1f7ceeb01b906b&page=" + currentPage + "&primary_release_date.gte=" + curYear + "-" + "0" + curMonth + "-" + "01");
                 }else {
                     movie_json_string = HttpHandler.getUpcomingMovies("http://api.themoviedb.org/3/discover/movie?api_key=6660760b6f822ad32b1f7ceeb01b906b&page=" + currentPage + "&primary_release_date.gte=" + curYear + "-" + curMonth + "-" + "01");
                 }

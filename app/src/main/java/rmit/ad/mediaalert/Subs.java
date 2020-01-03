@@ -2,8 +2,10 @@ package rmit.ad.mediaalert;
 
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
@@ -34,9 +36,12 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Subs extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, AdapterView.OnItemSelectedListener {
     DrawerLayout drawerLayout;
@@ -47,6 +52,12 @@ public class Subs extends AppCompatActivity implements NavigationView.OnNavigati
     private FirebaseAuth mAuth;
     FirebaseListAdapter adapter;
     ListView gameList;
+    MovieListObject movieListObject=new MovieListObject("","","");
+    private MovieAdapter movieAdapter;
+    private ArrayList<MovieListObject> movieListObjectsList= new ArrayList<MovieListObject>();
+    private Handler handler;
+
+
     @SuppressLint("RestrictedApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +78,9 @@ public class Subs extends AppCompatActivity implements NavigationView.OnNavigati
         });
 
 
+        handler = new Handler();
+        Context context = Subs.this;
+        movieAdapter = new MovieAdapter(context,movieListObjectsList);
         //Spinner
         Spinner spinner = findViewById(R.id.spinner);
         ArrayAdapter<CharSequence> adapterM = ArrayAdapter.createFromResource(this,R.array.subs,
@@ -84,7 +98,7 @@ public class Subs extends AppCompatActivity implements NavigationView.OnNavigati
         if(text.equals("Games")) {
             gameAdapter();
         } else if (text.equals("Movies")){
-            //Movie adapter
+            movieAdapter();
         } else if (text.equals("Tv Shows")){
             //Tv adapter
         }
@@ -95,6 +109,76 @@ public class Subs extends AppCompatActivity implements NavigationView.OnNavigati
 
     }
 
+    public void movieAdapter(){
+        mAuth = FirebaseAuth.getInstance();
+        FirebaseUser firebaseUser = mAuth.getCurrentUser();
+        String uid = firebaseUser.getUid();
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        gameList = findViewById(R.id.ListView);
+        firebaseDatabase.getReference().child("Users").child(uid).child("ListOfSubsMovie")
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                            Map<String,Object> movieID = (HashMap<String,Object>) dataSnapshot1.getValue();
+                            final String IDOfMovie = movieID.get("movieID").toString();
+                            firebaseDatabase.getReference().child("Movies").addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    for (DataSnapshot ds: dataSnapshot.getChildren()){
+                                        if (ds.getKey().equals(IDOfMovie)){
+                                            Map<String,Object> movieObject = (HashMap<String, Object>) ds.getValue();
+                                            String imgURL = movieObject.get("imgURL").toString();
+                                            String title = movieObject.get("originalTitle").toString();
+                                            String releaseDate = movieObject.get("releaseDate").toString();
+                                            String overview = movieObject.get("overview").toString();
+                                            String originalLanguage = movieObject.get("originalLanguage").toString();
+                                            int numberID = Integer.valueOf(movieObject.get("numberID").toString());
+                                            boolean isAdult = Boolean.valueOf(movieObject.get("adult").toString());
+                                            double voteAverage = Double.valueOf(movieObject.get("voteAverage").toString());
+                                            movieListObject = new MovieListObject(imgURL,title,releaseDate,numberID,isAdult,originalLanguage,voteAverage,overview);
+                                            //Toast.makeText(Subs.this,movieListObject.getOriginalTitle(),Toast.LENGTH_SHORT).show();
+                                            movieAdapter.add(movieListObject);
+                                            return;
+                                        }
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                }
+                            });
+
+                        }
+                    }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                    }
+                });
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                gameList.setAdapter(movieAdapter);
+                gameList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        MovieListObject movie = (MovieListObject) parent.getAdapter().getItem(position);
+                        Intent intent = new Intent(Subs.this,SubsMovieDetailsActivity.class);
+                        intent.putExtra("title",movie.getOriginalTitle());
+                        intent.putExtra("vote",movie.getVoteAverage());
+                        intent.putExtra("ID", movie.getNumberID());
+                        intent.putExtra("img", movie.getImgURL());
+                        intent.putExtra("adult", movie.isAdult());
+                        intent.putExtra("releaseDate", movie.getReleaseDate());
+                        intent.putExtra("overview", movie.getOverview());
+                        intent.putExtra("language", movie.getOriginalLanguage());
+                        startActivity(intent);
+                    }
+                });
+            }
+        },5000);
+    }
     public void gameAdapter(){
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser firebaseUser = mAuth.getCurrentUser();

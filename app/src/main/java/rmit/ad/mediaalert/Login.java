@@ -17,8 +17,12 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import rmit.ad.mediaalert.admin.AdminHomePage;
+
 public class Login extends AppCompatActivity {
     private static final String TAG = Login.class.getName();
+    private final static String ADMIN_USERNAME = "admin@mediaalert.com";
+
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     EditText mEmail,mPassword;
@@ -54,7 +58,7 @@ public class Login extends AppCompatActivity {
         mLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String email = mEmail.getText().toString();
+                final String email = mEmail.getText().toString();
                 String pass = mPassword.getText().toString();
                 if(!email.equals("") && !pass.equals("")){
                     mAuth.signInWithEmailAndPassword(email,pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -64,7 +68,13 @@ public class Login extends AppCompatActivity {
                                 // Sign in success, update UI with the signed-in user's information
                                 Log.d(TAG, "signInWithEmail:success");
                                 FirebaseUser user = mAuth.getCurrentUser();
-                                Intent iSub = new Intent(Login.this,MainActivity.class);
+                                Intent iSub;
+                                if(email.equals(ADMIN_USERNAME)){
+                                    iSub = new Intent(Login.this, AdminHomePage.class);
+                                } else {
+                                    iSub = new Intent(Login.this,MainActivity.class);
+                                }
+
                                 startActivity(iSub);
                             } else {
                                 // If sign in fails, display a message to the user.

@@ -15,10 +15,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".MoviesDetailActivity"></activity>
-        <activity android:name=".MainActivity">
-
-        </activity>
+        <activity android:name=".SubsMovieDetailsActivity"></activity>
+        <activity android:name=".MoviesDetailActivity" />
+        <activity android:name=".MainActivity"></activity>
         <activity android:name=".Movies" />
         <activity android:name=".Games" />
         <activity android:name=".TvShows" />
@@ -31,10 +30,10 @@
         </activity>
         <activity android:name=".Register" />
         <activity android:name=".Subs" />
-        <activity android:name="GameDetails"/>
-        <activity android:name=".admin.AdminLogin"/>
-        <activity android:name=".admin.AdminHomePage"/>
-        <activity android:name=".admin.AddTvShowActivity"/>
+        <activity android:name=".GameDetails" />
+        <activity android:name=".admin.AdminLogin" />
+        <activity android:name=".admin.AdminHomePage" />
+        <activity android:name=".admin.AddTvShowActivity" />
         <activity android:name=".tvShows.TvShowActivity" />
         <activity android:name=".SubGames" />
     </application>
