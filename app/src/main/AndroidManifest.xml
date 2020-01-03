@@ -36,6 +36,7 @@
         <activity android:name=".admin.AdminHomePage"/>
         <activity android:name=".admin.AddTvShowActivity"/>
         <activity android:name=".tvShows.TvShowActivity" />
+        <activity android:name=".SubGames" />
     </application>
 
 </manifest>
