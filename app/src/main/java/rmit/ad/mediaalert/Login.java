@@ -1,11 +1,17 @@
 package rmit.ad.mediaalert;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -22,7 +28,8 @@ import rmit.ad.mediaalert.admin.AdminHomePage;
 public class Login extends AppCompatActivity {
     private static final String TAG = Login.class.getName();
     private final static String ADMIN_USERNAME = "admin@mediaalert.com";
-
+    private Switch wifiSwitch;
+    private WifiManager wifiManager;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     EditText mEmail,mPassword;
@@ -31,6 +38,23 @@ public class Login extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
+
+        wifiSwitch = findViewById(R.id.wifi_switch);
+        wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+
+        wifiSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    wifiManager.setWifiEnabled(true);
+                    wifiSwitch.setText("WiFi is ON");
+                } else {
+                    wifiManager.setWifiEnabled(false);
+                    wifiSwitch.setText("WiFi is OFF");
+                }
+            }
+        });
+
 
         mEmail = findViewById(R.id.edtEmail);
         mPassword = findViewById(R.id.edtPassword);
@@ -97,4 +121,36 @@ public class Login extends AppCompatActivity {
             }
         });
     }
+    //---------------------------- Wifi Broadcast receiver
+    @Override
+    protected void onStart() {
+        super.onStart();
+        IntentFilter intentFilter = new IntentFilter(WifiManager.WIFI_STATE_CHANGED_ACTION);
+        registerReceiver(wifiStateReceiver, intentFilter);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        unregisterReceiver(wifiStateReceiver);
+    }
+
+    private BroadcastReceiver wifiStateReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            int wifiStateExtra = intent.getIntExtra(WifiManager.EXTRA_WIFI_STATE,
+                    WifiManager.WIFI_STATE_UNKNOWN);
+
+            switch (wifiStateExtra) {
+                case WifiManager.WIFI_STATE_ENABLED:
+                    wifiSwitch.setChecked(true);
+                    wifiSwitch.setText("WiFi is ON");
+                    break;
+                case WifiManager.WIFI_STATE_DISABLED:
+                    wifiSwitch.setChecked(false);
+                    wifiSwitch.setText("WiFi is OFF");
+                    break;
+            }
+        }
+    };
 }

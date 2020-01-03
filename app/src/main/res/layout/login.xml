@@ -13,11 +13,20 @@
         android:gravity="center_horizontal"
         android:orientation="vertical">
 
+        <Switch
+            android:id="@+id/wifi_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="140dp"
+            android:textColor="#FFF"
+            android:text="WiFi is OFF " />
+
         <TextView
             android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="80dp"
+            android:layout_marginTop="40dp"
             android:fontFamily="sans-serif-condensed"
             android:text="Media Alert"
             android:textColor="#FFFFFF"
@@ -80,4 +89,5 @@
             android:textSize="20dp" />
 
     </LinearLayout>
+
 </RelativeLayout>
