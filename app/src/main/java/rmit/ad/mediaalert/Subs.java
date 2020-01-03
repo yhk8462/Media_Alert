@@ -110,6 +110,7 @@ public class Subs extends AppCompatActivity implements NavigationView.OnNavigati
     }
 
     public void movieAdapter(){
+        movieAdapter.clear();
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser firebaseUser = mAuth.getCurrentUser();
         String uid = firebaseUser.getUid();
