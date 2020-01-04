@@ -3,6 +3,7 @@ package rmit.ad.mediaalert;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -18,6 +19,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -55,6 +58,7 @@ public class Movies extends AppCompatActivity implements NavigationView.OnNaviga
     private boolean isStateChange = false;
     private int curMonth;
     private int curYear;
+    private String filterMonth="";
 
 
     @SuppressLint("RestrictedApi")
@@ -105,6 +109,122 @@ public class Movies extends AppCompatActivity implements NavigationView.OnNaviga
 
             }
         });
+        Spinner spinner = findViewById(R.id.spinner);
+        ArrayAdapter<CharSequence> adapterM = ArrayAdapter.createFromResource(this,R.array.month2,
+                android.R.layout.simple_spinner_item);
+        adapterM.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapterM);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String text = parent.getItemAtPosition(position).toString();
+                if (text.equals("January")){
+                    filterMonth = "01";
+                    currentPage=0;
+                    totalPage=1;
+                    movieAdapter.clear();
+                    editTextSearchMovieName.setText("");
+                    SearchBar = editTextSearchMovieName.getText().toString();
+
+                }else if (text.equals("February")){
+                    filterMonth = "02";
+                    currentPage=0;
+                    totalPage=1;
+                    movieAdapter.clear();
+                    editTextSearchMovieName.setText("");
+                    SearchBar = editTextSearchMovieName.getText().toString();
+
+                }else if (text.equals("March")){
+                    filterMonth = "03";
+                    currentPage=0;
+                    totalPage=1;
+                    movieAdapter.clear();
+                    editTextSearchMovieName.setText("");
+                    SearchBar = editTextSearchMovieName.getText().toString();
+
+                }else if (text.equals("April")){
+                    filterMonth = "04";
+                    currentPage=0;
+                    totalPage=1;
+                    movieAdapter.clear();
+                    editTextSearchMovieName.setText("");
+                    SearchBar = editTextSearchMovieName.getText().toString();
+
+                }else if (text.equals("May")){
+                    filterMonth = "05";
+                    currentPage=0;
+                    totalPage=1;
+                    movieAdapter.clear();
+                    editTextSearchMovieName.setText("");
+                    SearchBar = editTextSearchMovieName.getText().toString();
+
+                }else if (text.equals("June")){
+                    filterMonth = "06";
+                    currentPage=0;
+                    totalPage=1;
+                    movieAdapter.clear();
+                    editTextSearchMovieName.setText("");
+                    SearchBar = editTextSearchMovieName.getText().toString();
+
+                }else if (text.equals("July")){
+                    filterMonth = "07";
+                    currentPage=0;
+                    totalPage=1;
+                    movieAdapter.clear();
+                    editTextSearchMovieName.setText("");
+                    SearchBar = editTextSearchMovieName.getText().toString();
+
+                }else if (text.equals("August")){
+                    filterMonth = "08";
+                    currentPage=0;
+                    totalPage=1;
+                    movieAdapter.clear();
+                    editTextSearchMovieName.setText("");
+                    SearchBar = editTextSearchMovieName.getText().toString();
+
+                }else if (text.equals("September")){
+                    filterMonth = "09";
+                    currentPage=0;
+                    totalPage=1;
+                    movieAdapter.clear();
+                    editTextSearchMovieName.setText("");
+                    SearchBar = editTextSearchMovieName.getText().toString();
+
+                }else if (text.equals("October")){
+                    filterMonth = "10";
+                    currentPage=0;
+                    totalPage=1;
+                    movieAdapter.clear();
+                    editTextSearchMovieName.setText("");
+                    SearchBar = editTextSearchMovieName.getText().toString();
+
+                }else if (text.equals("November")){
+                    filterMonth = "11";
+                    currentPage=0;
+                    totalPage=1;
+                    movieAdapter.clear();
+                    editTextSearchMovieName.setText("");
+                    SearchBar = editTextSearchMovieName.getText().toString();
+
+                }else if (text.equals("December")){
+                    filterMonth = "12";
+                    currentPage=0;
+                    totalPage=1;
+                    movieAdapter.clear();
+                    editTextSearchMovieName.setText("");
+                    SearchBar = editTextSearchMovieName.getText().toString();
+
+                }
+                ((TextView) parent.getChildAt(0)).setTextSize(20);
+                ((TextView) parent.getChildAt(0)).setTextColor(Color.BLUE);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                filterMonth = "";
+
+            }
+        });
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -152,10 +272,22 @@ public class Movies extends AppCompatActivity implements NavigationView.OnNaviga
         @Override
         protected Void doInBackground(Void... voids) {
             if(SearchBar.equals("Search Movie")||SearchBar.equals("")) {
-                if (curMonth>=1&&curMonth<=9){
+                if (curMonth>=1&&curMonth<=9 && filterMonth.equals("")){
                     movie_json_string = HttpHandler.getUpcomingMovies("http://api.themoviedb.org/3/discover/movie?api_key=6660760b6f822ad32b1f7ceeb01b906b&page=" + currentPage + "&primary_release_date.gte=" + curYear + "-" + "0" + curMonth + "-" + "01");
-                }else {
+                }else if (curMonth>=10&&curMonth<=12 && filterMonth.equals("")) {
                     movie_json_string = HttpHandler.getUpcomingMovies("http://api.themoviedb.org/3/discover/movie?api_key=6660760b6f822ad32b1f7ceeb01b906b&page=" + currentPage + "&primary_release_date.gte=" + curYear + "-" + curMonth + "-" + "01");
+                }else{
+                    if (filterMonth.equals("01")||filterMonth.equals("03")||filterMonth.equals("05")||filterMonth.equals("07")||filterMonth.equals("08")||filterMonth.equals("10")||filterMonth.equals("12")){
+                        movie_json_string = HttpHandler.getUpcomingMovies("http://api.themoviedb.org/3/discover/movie?api_key=6660760b6f822ad32b1f7ceeb01b906b&page=" + currentPage + "&primary_release_date.gte="+curYear+"-"+filterMonth+"-01"+"&primary_release_date.lte="+curYear+"-"+filterMonth+"-31");
+                    }
+                    else if (filterMonth.equals("04")||filterMonth.equals("06")||filterMonth.equals("09")||filterMonth.equals("11")){
+                        movie_json_string = HttpHandler.getUpcomingMovies("http://api.themoviedb.org/3/discover/movie?api_key=6660760b6f822ad32b1f7ceeb01b906b&page=" + currentPage + "&primary_release_date.gte="+curYear+"-"+filterMonth+"-01"+"&primary_release_date.lte="+curYear+"-"+filterMonth+"-30");
+                    }
+                    else if (filterMonth.equals("02")){
+                        movie_json_string = HttpHandler.getUpcomingMovies("http://api.themoviedb.org/3/discover/movie?api_key=6660760b6f822ad32b1f7ceeb01b906b&page=" + currentPage + "&primary_release_date.gte="+curYear+"-"+filterMonth+"-01"+"&primary_release_date.lte="+curYear+"-03-01");
+
+                    }
+
                 }
             } else {
                 movie_json_string = HttpHandler.getUpcomingMovies("http://api.themoviedb.org/3/search/movie?api_key=6660760b6f822ad32b1f7ceeb01b906b&page=" + currentPage + "&query=" + SearchBar);

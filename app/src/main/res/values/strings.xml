@@ -10,6 +10,21 @@
         <item>April</item>
         <item>May</item>
     </string-array>
+    <string-array name="month2">
+        <item></item>
+        <item>January</item>
+        <item>February</item>
+        <item>March</item>
+        <item>April</item>
+        <item>May</item>
+        <item>June</item>
+        <item>July</item>
+        <item>August</item>
+        <item>September</item>
+        <item>October</item>
+        <item>November</item>
+        <item>December</item>
+    </string-array>
     <string-array name="subs">
         <item>Games</item>
         <item>Movies</item>
