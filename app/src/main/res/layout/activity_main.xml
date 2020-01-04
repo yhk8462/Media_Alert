@@ -15,7 +15,7 @@
         <ImageView
             android:id="@+id/imageView4"
             android:layout_width="match_parent"
-            android:layout_height="159dp"
+            android:layout_height="200dp"
             android:layout_marginTop="60dp"
             android:layout_marginBottom="40dp"
             app:srcCompat="@drawable/logo" />
@@ -24,7 +24,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="40dp"
             android:orientation="horizontal">
 
             <Button
@@ -34,6 +33,7 @@
                 android:gravity="bottom|center"
                 android:paddingBottom="20dp"
                 android:background="@drawable/corners2"
+                android:textColor="#FFF"
                 android:text="Movies" />
 
             <Space
@@ -48,6 +48,7 @@
                 android:gravity="bottom|center"
                 android:paddingBottom="20dp"
                 android:background="@drawable/corners2"
+                android:textColor="#FFF"
                 android:text="Games" />
 
         </LinearLayout>
@@ -66,6 +67,7 @@
                 android:gravity="bottom|center"
                 android:paddingBottom="20dp"
                 android:background="@drawable/corners2"
+                android:textColor="#FFF"
                 android:text="Tv Shows" />
 
             <Space
@@ -80,6 +82,7 @@
                 android:gravity="bottom|center"
                 android:paddingBottom="20dp"
                 android:background="@drawable/corners2"
+                android:textColor="#FFF"
                 android:text="subscription" />
         </LinearLayout>
 
@@ -107,7 +110,7 @@
         android:layout_height="100dp"
         android:layout_marginLeft="248dp"
         android:layout_marginTop="320dp"
-        app:srcCompat="@drawable/game" />
+        app:srcCompat="@drawable/games" />
 
     <ImageView
         android:id="@+id/imageView6"

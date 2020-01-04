@@ -16,6 +16,9 @@
         android:id="@+id/sub"
         android:title="Subscription"/>
     <item
+        android:title=""/>
+
+    <item
         android:id="@+id/logout"
         android:title="Log out"/>
 </menu>

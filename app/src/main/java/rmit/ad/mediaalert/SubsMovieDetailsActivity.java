@@ -29,6 +29,8 @@ import com.squareup.picasso.Picasso;
 import java.util.HashMap;
 import java.util.Map;
 
+import rmit.ad.mediaalert.tvShows.TvShowActivity;
+
 public class SubsMovieDetailsActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
     DrawerLayout drawerLayout;
     ActionBarDrawerToggle toggle;
@@ -58,7 +60,7 @@ public class SubsMovieDetailsActivity extends AppCompatActivity implements Navig
         });
 
         Intent intent = getIntent();
-        String title=(String)intent.getExtras().get("title");
+        final String title=(String)intent.getExtras().get("title");
         double vote=(double)intent.getExtras().get("vote");
         final int ID=(int)intent.getExtras().get("ID");
         String img=(String)intent.getExtras().get("img");
@@ -125,10 +127,11 @@ public class SubsMovieDetailsActivity extends AppCompatActivity implements Navig
                     @Override
                     public void run() {
                         firebaseDatabase.getReference().child("Users").child(uid).child("ListOfSubsMovie").child(subsKey).removeValue();
+
                     }
-                }, 5000);
-
-
+                }, 1000);
+                Intent sub = new Intent(SubsMovieDetailsActivity.this,Subs.class);
+                startActivity(sub);
             }
         });
     }
@@ -153,7 +156,7 @@ public class SubsMovieDetailsActivity extends AppCompatActivity implements Navig
                 break;
             case R.id.tvshows:
                 Toast.makeText(this,"tvshows selected",Toast.LENGTH_SHORT).show();
-                Intent intent4 = new Intent(this,TvShows.class);
+                Intent intent4 = new Intent(this, TvShowActivity.class);
                 startActivity(intent4);
                 break;
             case R.id.sub:

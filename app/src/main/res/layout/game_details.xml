@@ -82,7 +82,7 @@
                         android:layout_marginTop="10dp"
                         android:paddingLeft="20dp"
                         android:text="Date"
-                        android:textColor="#000EFD"
+                        android:textColor="#FFC004"
                         android:textSize="20dp"
                         android:textStyle="italic" />
 
@@ -113,14 +113,29 @@
             </LinearLayout>
 
             <TextView
-                android:id="@+id/game_des"
+                android:id="@+id/descriptionHeader"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="30dp"
+                android:layout_marginLeft="10dp"
                 android:layout_marginTop="10dp"
+                android:layout_marginRight="10dp"
+                android:background="#000"
                 android:paddingLeft="20dp"
                 android:paddingRight="20dp"
                 android:text="Description"
-                android:textColor="#FFFF"
+                android:textAlignment="center"
+                android:textColor="@android:color/white"
+                android:textSize="20dp" />
+
+            <TextView
+                android:id="@+id/game_des"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:background="#8Cffffff"
+                android:padding="10dp"
+                android:text="Description"
                 android:textSize="20dp" />
 
             <Button

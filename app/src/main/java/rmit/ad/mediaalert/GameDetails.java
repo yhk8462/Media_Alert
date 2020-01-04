@@ -32,6 +32,8 @@ import com.squareup.picasso.Picasso;
 import java.util.HashMap;
 import java.util.Map;
 
+import rmit.ad.mediaalert.tvShows.TvShowActivity;
+
 import static android.os.Build.ID;
 
 public class GameDetails extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -124,6 +126,11 @@ public class GameDetails extends AppCompatActivity implements NavigationView.OnN
                             firebaseDatabase.getReference().child("Users").child(key).child("ListOfSubsGames").child(name).setValue(gameList);
                         }
                     }, 1000);
+                    SubscribeDialog subscribeDialog = new SubscribeDialog();
+                    Bundle args = new Bundle();
+                    args.putString("name", name);
+                    subscribeDialog.setArguments(args);
+                    subscribeDialog.show(getSupportFragmentManager(), "Sub");
                 }
             }
         });
@@ -193,7 +200,7 @@ public class GameDetails extends AppCompatActivity implements NavigationView.OnN
                 break;
             case R.id.tvshows:
                 Toast.makeText(this,"tvshows selected",Toast.LENGTH_SHORT).show();
-                Intent intent4 = new Intent(this,TvShows.class);
+                Intent intent4 = new Intent(this, TvShowActivity.class);
                 startActivity(intent4);
                 break;
             case R.id.sub:

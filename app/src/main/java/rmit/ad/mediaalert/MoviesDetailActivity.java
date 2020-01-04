@@ -33,6 +33,8 @@ import com.squareup.picasso.Picasso;
 import java.util.HashMap;
 import java.util.Map;
 
+import rmit.ad.mediaalert.tvShows.TvShowActivity;
+
 public class MoviesDetailActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private FirebaseDatabase firebaseDatabase;
@@ -65,7 +67,7 @@ public class MoviesDetailActivity extends AppCompatActivity implements Navigatio
         firebaseDatabase = FirebaseDatabase.getInstance();
         myRef = firebaseDatabase.getReference().child("Movies");
         Intent intent = getIntent();
-        String title=(String)intent.getExtras().get("title");
+        final String title=(String)intent.getExtras().get("title");
         double vote=(double)intent.getExtras().get("vote");
         final int ID=(int)intent.getExtras().get("ID");
         String img=(String)intent.getExtras().get("img");
@@ -140,7 +142,11 @@ public class MoviesDetailActivity extends AppCompatActivity implements Navigatio
 
                         }
                     }, 5000);
-
+                    SubscribeDialog subscribeDialog = new SubscribeDialog();
+                    Bundle args = new Bundle();
+                    args.putString("name", title);
+                    subscribeDialog.setArguments(args);
+                    subscribeDialog.show(getSupportFragmentManager(), "Sub");
                 }
                 button1.setVisibility(View.GONE);
             }
@@ -210,7 +216,7 @@ public class MoviesDetailActivity extends AppCompatActivity implements Navigatio
                 break;
             case R.id.tvshows:
                 Toast.makeText(this,"tvshows selected",Toast.LENGTH_SHORT).show();
-                Intent intent4 = new Intent(this,TvShows.class);
+                Intent intent4 = new Intent(this, TvShowActivity.class);
                 startActivity(intent4);
                 break;
             case R.id.sub:

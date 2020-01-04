@@ -4,6 +4,7 @@ package rmit.ad.mediaalert;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -42,6 +43,8 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+import rmit.ad.mediaalert.tvShows.TvShowActivity;
 
 public class Subs extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, AdapterView.OnItemSelectedListener {
     DrawerLayout drawerLayout;
@@ -93,8 +96,8 @@ public class Subs extends AppCompatActivity implements NavigationView.OnNavigati
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         ((TextView) parent.getChildAt(0)).setTextSize(20);
+        ((TextView) parent.getChildAt(0)).setTextColor(Color.BLUE);
         String text = parent.getItemAtPosition(position).toString();
-        Toast.makeText(this, ""+text, Toast.LENGTH_SHORT).show();
         if(text.equals("Games")) {
             gameAdapter();
         } else if (text.equals("Movies")){
@@ -178,7 +181,7 @@ public class Subs extends AppCompatActivity implements NavigationView.OnNavigati
                     }
                 });
             }
-        },5000);
+        },1000);
     }
     public void gameAdapter(){
         mAuth = FirebaseAuth.getInstance();
@@ -245,7 +248,7 @@ public class Subs extends AppCompatActivity implements NavigationView.OnNavigati
                 break;
             case R.id.tvshows:
                 Toast.makeText(this,"tvshows selected",Toast.LENGTH_SHORT).show();
-                Intent intent4 = new Intent(this,TvShows.class);
+                Intent intent4 = new Intent(this, TvShowActivity.class);
                 startActivity(intent4);
                 break;
             case R.id.sub:

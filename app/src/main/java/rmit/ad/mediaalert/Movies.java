@@ -40,6 +40,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import rmit.ad.mediaalert.tvShows.TvShowActivity;
+
 public class Movies extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     DrawerLayout drawerLayout;
     NavigationView navigationView;
@@ -349,7 +351,7 @@ public class Movies extends AppCompatActivity implements NavigationView.OnNaviga
                 break;
             case R.id.tvshows:
                 Toast.makeText(this,"tvshows selected",Toast.LENGTH_SHORT).show();
-                Intent intent4 = new Intent(this,TvShows.class);
+                Intent intent4 = new Intent(this, TvShowActivity.class);
                 startActivity(intent4);
                 break;
             case R.id.sub:

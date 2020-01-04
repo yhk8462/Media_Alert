@@ -32,6 +32,8 @@ import com.squareup.picasso.Picasso;
 import java.util.HashMap;
 import java.util.Map;
 
+import rmit.ad.mediaalert.tvShows.TvShowActivity;
+
 import static android.os.Build.ID;
 
 public class SubGames extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -98,9 +100,10 @@ public class SubGames extends AppCompatActivity implements NavigationView.OnNavi
         button1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent sub = new Intent(SubGames.this,Subs.class);
+                startActivity(sub);
                 myRef.child(key).child("ListOfSubsGames").child(name).removeValue();
-                Intent unsub = new Intent(SubGames.this,Subs.class);
-                startActivity(unsub);
+
             }
         });
     }
@@ -125,7 +128,7 @@ public class SubGames extends AppCompatActivity implements NavigationView.OnNavi
                 break;
             case R.id.tvshows:
                 Toast.makeText(this,"tvshows selected",Toast.LENGTH_SHORT).show();
-                Intent intent4 = new Intent(this,TvShows.class);
+                Intent intent4 = new Intent(this, TvShowActivity.class);
                 startActivity(intent4);
                 break;
             case R.id.sub:

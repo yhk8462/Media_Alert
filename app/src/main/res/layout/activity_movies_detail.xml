@@ -15,8 +15,6 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -44,36 +42,29 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="10dp"
-            android:orientation="horizontal"
-            >
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="10dp">
 
-            <RelativeLayout
+
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
 
                 <ImageView
                     android:id="@+id/Image"
-                    android:layout_width="100dp"
-                    android:layout_height="150dp" />
-
-                <Button
-                    android:id="@+id/button"
-                    android:layout_width="100dp"
-                    android:layout_height="40dp"
-                    android:layout_gravity="end"
-                    android:layout_marginTop="160dp"
-                    android:background="@drawable/corners3"
-                    android:stateListAnimator="@null"
-                    android:textColor="#FFFFFF"
-                    android:text="Subscribe" />
+                    android:layout_width="150dp"
+                    android:layout_height="200dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="10dp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginStart="110dp"
+                    android:layout_height="wrap_content"
                     android:gravity="top"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="20dp"
                     android:orientation="vertical">
 
                     <TextView
@@ -81,7 +72,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Name"
-                        android:textColor="#000"
+                        android:textColor="#FFF"
                         android:textSize="20dp"
                         android:textStyle="bold" />
 
@@ -91,7 +82,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
                         android:text="Date"
-                        android:textColor="#041DFF"
+                        android:textColor="#FFC004"
                         android:textSize="20dp"
                         android:textStyle="italic" />
 
@@ -100,7 +91,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="TextView"
-                        android:textColor="#000"
+                        android:textColor="#FFF"
                         android:textSize="20dp"
                         android:textStyle="normal" />
 
@@ -109,7 +100,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="TextView"
-                        android:textColor="#000"
+                        android:textColor="#FFF"
                         android:textSize="20dp"
                         android:textStyle="normal" />
 
@@ -118,20 +109,50 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="TextView"
-                        android:textColor="#000"
+                        android:textColor="#FFF"
                         android:textSize="20dp"
                         android:textStyle="normal" />
 
-                    <TextView
-                        android:id="@+id/overview"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textColor="#000"
-                        android:textSize="20dp"
-                        android:textStyle="normal" />
+
 
                 </LinearLayout>
-            </RelativeLayout>
+            </LinearLayout>
+            <TextView
+                android:id="@+id/descriptionHeader"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="10dp"
+                android:background="#000"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:text="Description"
+                android:textAlignment="center"
+                android:textColor="@android:color/white"
+                android:textSize="20dp" />
+
+            <TextView
+                android:id="@+id/overview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:background="#8Cffffff"
+                android:padding="10dp"
+                android:text="Description"
+                android:textSize="20dp" />
+
+            <Button
+                android:id="@+id/button"
+                android:layout_width="100dp"
+                android:layout_height="40dp"
+                android:layout_gravity="end"
+                android:layout_marginTop="160dp"
+                android:background="@drawable/corners3"
+                android:stateListAnimator="@null"
+                android:text="Subscribe"
+                android:textColor="#FFFFFF" />
 
 
         </LinearLayout>

@@ -43,6 +43,8 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
+import rmit.ad.mediaalert.tvShows.TvShowActivity;
+
 public class Games extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
         AdapterView.OnItemSelectedListener {
     private static final String TAG = "Games";
@@ -228,7 +230,7 @@ public class Games extends AppCompatActivity implements NavigationView.OnNavigat
                 break;
             case R.id.tvshows:
                 Toast.makeText(this,"tvshows selected",Toast.LENGTH_SHORT).show();
-                Intent intent4 = new Intent(this,TvShows.class);
+                Intent intent4 = new Intent(this, TvShowActivity.class);
                 startActivity(intent4);
                 break;
             case R.id.sub:

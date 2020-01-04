@@ -33,7 +33,7 @@
                 android:fontFamily="sans-serif-condensed"
                 android:text="New Account"
                 android:layout_marginTop="10dp"
-                android:layout_marginLeft="20dp"
+                android:layout_marginLeft="10dp"
                 android:textColor="#FFFFFF"
                 android:textSize="40dp" />
 
@@ -46,8 +46,10 @@
             android:layout_marginTop="20dp"
             android:background="#11000000"
             android:drawableLeft="@drawable/email"
+            android:paddingLeft="10dp"
+            android:textColorHint="#FFF"
             android:ems="10"
-            android:hint="  Email"
+            android:hint="Email"
             android:inputType="textEmailAddress"
 
             android:textSize="20dp" />
@@ -59,8 +61,10 @@
             android:layout_marginTop="20dp"
             android:background="#11000000"
             android:drawableLeft="@drawable/lock"
+            android:paddingLeft="10dp"
+            android:textColorHint="#FFF"
             android:ems="10"
-            android:hint="  Password"
+            android:hint="Password"
             android:inputType="textPassword"
             android:textSize="20dp" />
 
@@ -71,8 +75,10 @@
             android:layout_marginTop="20dp"
             android:background="#11000000"
             android:drawableLeft="@drawable/name"
+            android:paddingLeft="10dp"
+            android:textColorHint="#FFF"
             android:ems="10"
-            android:hint="  Name"
+            android:hint="Name"
             android:textSize="20dp" />
 
         <EditText
@@ -82,8 +88,10 @@
             android:layout_marginTop="20dp"
             android:background="#11000000"
             android:drawableLeft="@drawable/phone"
+            android:paddingLeft="10dp"
+            android:textColorHint="#FFF"
             android:ems="10"
-            android:hint="  Phone Number"
+            android:hint="Phone Number"
             android:inputType="number"
             android:textSize="20dp" />
 
@@ -93,7 +101,7 @@
             android:layout_height="40dp"
             android:layout_marginTop="30dp"
             android:layout_marginLeft="140dp"
-            android:background="@drawable/corners"
+            android:background="@drawable/corners3"
             android:elevation="16dp"
             android:text="Create"
             android:textColor="#FFFFFF"

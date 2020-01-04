@@ -410,7 +410,7 @@ public class TvShowActivity extends AppCompatActivity implements NavigationView.
                 break;
             case R.id.tvshows:
                 Toast.makeText(this, "tvshows selected", Toast.LENGTH_SHORT).show();
-                Intent intent4 = new Intent(this, TvShows.class);
+                Intent intent4 = new Intent(this, TvShowActivity.class);
                 startActivity(intent4);
                 break;
             case R.id.sub:
