@@ -11,7 +11,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.VideoView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -22,10 +21,12 @@ import com.bumptech.glide.Glide;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
-import rmit.ad.mediaalert.GameList;
 import rmit.ad.mediaalert.Games;
 import rmit.ad.mediaalert.Login;
 import rmit.ad.mediaalert.MainActivity;
@@ -33,8 +34,8 @@ import rmit.ad.mediaalert.Movies;
 import rmit.ad.mediaalert.R;
 import rmit.ad.mediaalert.Subs;
 import rmit.ad.mediaalert.SubscribeDialog;
-import rmit.ad.mediaalert.TvShows;
 import rmit.ad.mediaalert.UnSubscribeDialog;
+import rmit.ad.mediaalert.User;
 
 public class TvShowDetails extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     DrawerLayout drawerLayout;
@@ -42,10 +43,11 @@ public class TvShowDetails extends AppCompatActivity implements NavigationView.O
     NavigationView navigationView;
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference myRef;
-    private GameList gameList;
+    private TvShowItem tvShowItem;
     private FirebaseAuth mAuth;
     private String email = "";
     private String key = "";
+    private boolean showSubButton = true;
 
     @SuppressLint("RestrictedApi")
     @Override
@@ -60,7 +62,7 @@ public class TvShowDetails extends AppCompatActivity implements NavigationView.O
 
         final Button button = findViewById(R.id.btnSidebar);
         final Button unsubscribe = findViewById(R.id.unsubscribe);
-        unsubscribe.setVisibility(View.GONE);
+
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -83,6 +85,8 @@ public class TvShowDetails extends AppCompatActivity implements NavigationView.O
         String des = (String) details.getExtras().get("description");
         String imageURL = (String) details.getExtras().get("imageURL");
 
+        tvShowItem = new TvShowItem(name, imageURL, des, date, tvshowCategory);
+
         Glide.with(TvShowDetails.this).load(imageURL).into(tvShowImg);
         header.setText(name);
 
@@ -97,6 +101,40 @@ public class TvShowDetails extends AppCompatActivity implements NavigationView.O
 
         final Handler handler = new Handler();
         final Button btnSub = findViewById(R.id.button);
+
+        mAuth = FirebaseAuth.getInstance();
+        FirebaseUser firebaseUser = mAuth.getCurrentUser();
+        final String uid = firebaseUser.getUid();
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        myRef = firebaseDatabase.getReference().child("Users").child(uid).child("ListOfSubsTvShows");
+
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.hasChild(name)) {
+                    showSubButton = false;
+                    btnSub.setVisibility(View.GONE);
+                    unsubscribe.setVisibility(View.VISIBLE);
+                } else {
+                    btnSub.setVisibility(View.VISIBLE);
+                    unsubscribe.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        if(showSubButton) {
+            btnSub.setVisibility(View.VISIBLE);
+            unsubscribe.setVisibility(View.GONE);
+        } else {
+            btnSub.setVisibility(View.GONE);
+            unsubscribe.setVisibility(View.VISIBLE);
+        }
+
         btnSub.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -106,14 +144,40 @@ public class TvShowDetails extends AppCompatActivity implements NavigationView.O
                 args.putString("name", name);
                 subscribeDialog.setArguments(args);
                 subscribeDialog.show(getSupportFragmentManager(), "Sub");
+
                 btnSub.setVisibility(View.GONE);
                 unsubscribe.setVisibility(View.VISIBLE);
 
+
                 FirebaseUser firebaseUser = mAuth.getCurrentUser();
                 if (firebaseUser != null) {
+                    email = firebaseUser.getEmail();
+                    firebaseDatabase.getReference().child("Users")
+                            .addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                                        User user = ds.getValue(User.class);
+                                        key = ds.getKey();
+                                        if (user.getEmail().equals(email)) {
+                                            return;
+                                        }
+                                    }
+                                }
 
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
+                                }
+                            });
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            firebaseDatabase.getReference().child("Users").child(key).child("ListOfSubsTvShows").child(name).setValue(tvShowItem);
+                        }
+                    }, 1000);
                 }
             }
+
         });
 
 
@@ -131,12 +195,35 @@ public class TvShowDetails extends AppCompatActivity implements NavigationView.O
 
                 FirebaseUser firebaseUser = mAuth.getCurrentUser();
                 if (firebaseUser != null) {
+                    email = firebaseUser.getEmail();
+                    firebaseDatabase.getReference().child("Users")
+                            .addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                                        User user = ds.getValue(User.class);
+                                        key = ds.getKey();
+                                        if (user.getEmail().equals(email)) {
+                                            return;
+                                        }
+                                    }
+                                }
 
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
+                                }
+                            });
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            firebaseDatabase.getReference().child("Users").child(key).child("ListOfSubsTvShows").child(name).removeValue();
+                        }
+                    }, 1000);
                 }
+
+
             }
         });
-
-
     }
 
     @Override
