@@ -16,6 +16,9 @@
         android:id="@+id/sub"
         android:title="Subscription"/>
     <item
+        android:id="@+id/profile"
+        android:title="Your Profile"/>
+    <item
         android:title=""/>
 
     <item

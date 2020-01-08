@@ -31,6 +31,7 @@ import rmit.ad.mediaalert.Games;
 import rmit.ad.mediaalert.Login;
 import rmit.ad.mediaalert.MainActivity;
 import rmit.ad.mediaalert.Movies;
+import rmit.ad.mediaalert.ProfileActivity;
 import rmit.ad.mediaalert.R;
 import rmit.ad.mediaalert.Subs;
 import rmit.ad.mediaalert.SubscribeDialog;
@@ -253,6 +254,11 @@ public class TvShowDetails extends AppCompatActivity implements NavigationView.O
                 Toast.makeText(this, "sub selected", Toast.LENGTH_SHORT).show();
                 Intent intent5 = new Intent(this, Subs.class);
                 startActivity(intent5);
+                break;
+            case R.id.profile:
+                Toast.makeText(this, "profile selected", Toast.LENGTH_SHORT).show();
+                Intent intent7 = new Intent(this, ProfileActivity.class);
+                startActivity(intent7);
                 break;
             case R.id.logout:
                 Toast.makeText(this, "Loggin out", Toast.LENGTH_SHORT).show();
