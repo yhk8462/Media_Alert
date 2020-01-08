@@ -92,7 +92,6 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
             public void onClick(View v) {
                 name = editTextName.getText().toString();
                 phone = editTextPhone.getText().toString();
-                newUser = new User(email,password,name,phone);
                 firebaseDatabase.getReference().child("Users").child(uid).child("phone").setValue(phone);
                 firebaseDatabase.getReference().child("Users").child(uid).child("name").setValue(name);
                 Toast.makeText(ProfileActivity.this, "Information Updated", Toast.LENGTH_SHORT).show();
