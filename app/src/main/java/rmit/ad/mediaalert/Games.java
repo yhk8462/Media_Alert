@@ -165,11 +165,10 @@ public class Games extends AppCompatActivity implements NavigationView.OnNavigat
         });
         adapter.startListening();
     }
-    public void loadData(String searchText){
+    public void loadData(final String searchText){
         firebaseDatabase = FirebaseDatabase.getInstance();
         myRef = firebaseDatabase.getReference().child("Games");
         Query query = myRef.orderByChild("name").startAt(searchText).endAt(searchText + "\uf8ff");
-
         //myRef = firebaseDatabase.getReference().child("Users").child(key).child(subs);
         gameList = findViewById(R.id.ListView);
         FirebaseListOptions<GameList> options = new FirebaseListOptions.Builder<GameList>()
@@ -185,11 +184,11 @@ public class Games extends AppCompatActivity implements NavigationView.OnNavigat
                 ImageView listImage = v.findViewById(R.id.listImage);
 
                 GameList value = (GameList) model;
-
                 listName.setText(value.getName());
                 listPlatform.setText(value.getPlatform());
                 listDate.setText("Due: "+value.getDate());
                 Picasso.with(Games.this).load(value.getImage()).into(listImage);
+
             }
         };
         gameList.setAdapter(adapter);
