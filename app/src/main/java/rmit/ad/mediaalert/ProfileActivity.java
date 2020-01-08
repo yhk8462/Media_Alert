@@ -26,7 +26,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import rmit.ad.mediaalert.tvShows.TvShowActivity;
 
-public class ProfileActivity extends AppCompatActivity {
+public class ProfileActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
     DrawerLayout drawerLayout;
     ActionBarDrawerToggle toggle;
     NavigationView navigationView;
@@ -45,18 +45,18 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-//        drawerLayout = findViewById(R.id.drawer);
-//        drawerLayout.addDrawerListener(toggle);
-//        navigationView = findViewById(R.id.navigationView);
-//        navigationView.setNavigationItemSelectedListener(this);
-//
-//        Button button = findViewById(R.id.btnSidebar);
-//        button.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                drawerLayout.openDrawer(Gravity.LEFT);
-//            }
-//        });
+        drawerLayout = findViewById(R.id.drawer);
+        drawerLayout.addDrawerListener(toggle);
+        navigationView = findViewById(R.id.navigationView);
+        navigationView.setNavigationItemSelectedListener(this);
+
+        Button button = findViewById(R.id.btnSidebar);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                drawerLayout.openDrawer(Gravity.LEFT);
+            }
+        });
 
         final TextView textViewEmail = findViewById(R.id.textViewEmail);
         final EditText editTextName = findViewById(R.id.edtName);
@@ -102,45 +102,45 @@ public class ProfileActivity extends AppCompatActivity {
 
     }
 
-//    @Override
-//    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-//        switch (menuItem.getItemId()){
-//            case R.id.home:
-//                Toast.makeText(this,"Home selected",Toast.LENGTH_SHORT).show();
-//                Intent intent = new Intent(this,MainActivity.class);
-//                startActivity(intent);
-//                break;
-//            case R.id.movie:
-//                Toast.makeText(this,"movie selected",Toast.LENGTH_SHORT).show();
-//                Intent intent2 = new Intent(this,Movies.class);
-//                startActivity(intent2);
-//                break;
-//            case R.id.games:
-//                Toast.makeText(this,"games selected",Toast.LENGTH_SHORT).show();
-//                Intent intent3 = new Intent(this,Games.class);
-//                startActivity(intent3);
-//                break;
-//            case R.id.tvshows:
-//                Toast.makeText(this,"tvshows selected",Toast.LENGTH_SHORT).show();
-//                Intent intent4 = new Intent(this, TvShowActivity.class);
-//                startActivity(intent4);
-//                break;
-//            case R.id.sub:
-//                Toast.makeText(this,"sub selected",Toast.LENGTH_SHORT).show();
-//                Intent intent5 = new Intent(this,Subs.class);
-//                startActivity(intent5);
-//                break;
-//            case R.id.profile:
-//                Toast.makeText(this, "profile selected", Toast.LENGTH_SHORT).show();
-//                Intent intent7 = new Intent(this,ProfileActivity.class);
-//                startActivity(intent7);
-//                break;
-//            case R.id.logout:
-//                Toast.makeText(this, "Loggin out", Toast.LENGTH_SHORT).show();
-//                Intent intent6 = new Intent(this,Login.class);
-//                startActivity(intent6);
-//                break;
-//        }
-//        return false;
-//    }
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+        switch (menuItem.getItemId()){
+            case R.id.home:
+                Toast.makeText(this,"Home selected",Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(this,MainActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.movie:
+                Toast.makeText(this,"movie selected",Toast.LENGTH_SHORT).show();
+                Intent intent2 = new Intent(this,Movies.class);
+                startActivity(intent2);
+                break;
+            case R.id.games:
+                Toast.makeText(this,"games selected",Toast.LENGTH_SHORT).show();
+                Intent intent3 = new Intent(this,Games.class);
+                startActivity(intent3);
+                break;
+            case R.id.tvshows:
+                Toast.makeText(this,"tvshows selected",Toast.LENGTH_SHORT).show();
+                Intent intent4 = new Intent(this, TvShowActivity.class);
+                startActivity(intent4);
+                break;
+            case R.id.sub:
+                Toast.makeText(this,"sub selected",Toast.LENGTH_SHORT).show();
+                Intent intent5 = new Intent(this,Subs.class);
+                startActivity(intent5);
+                break;
+            case R.id.profile:
+                Toast.makeText(this, "profile selected", Toast.LENGTH_SHORT).show();
+                Intent intent7 = new Intent(this,ProfileActivity.class);
+                startActivity(intent7);
+                break;
+            case R.id.logout:
+                Toast.makeText(this, "Loggin out", Toast.LENGTH_SHORT).show();
+                Intent intent6 = new Intent(this,Login.class);
+                startActivity(intent6);
+                break;
+        }
+        return false;
+    }
 }
