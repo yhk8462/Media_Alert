@@ -26,6 +26,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import com.bumptech.glide.Glide;
 import com.firebase.ui.database.FirebaseListAdapter;
 import com.firebase.ui.database.FirebaseListOptions;
 import com.google.android.material.navigation.NavigationView;
@@ -45,6 +46,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import rmit.ad.mediaalert.tvShows.TvShowActivity;
+import rmit.ad.mediaalert.tvShows.TvShowDetails;
+import rmit.ad.mediaalert.tvShows.TvShowItem;
 
 public class Subs extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, AdapterView.OnItemSelectedListener {
     DrawerLayout drawerLayout;
@@ -55,6 +58,7 @@ public class Subs extends AppCompatActivity implements NavigationView.OnNavigati
     private FirebaseAuth mAuth;
     FirebaseListAdapter adapter;
     ListView gameList;
+    ListView tnshowList;
     MovieListObject movieListObject=new MovieListObject("","","");
     private MovieAdapter movieAdapter;
     private ArrayList<MovieListObject> movieListObjectsList= new ArrayList<MovieListObject>();
@@ -103,13 +107,58 @@ public class Subs extends AppCompatActivity implements NavigationView.OnNavigati
         } else if (text.equals("Movies")){
             movieAdapter();
         } else if (text.equals("Tv Shows")){
-            //Tv adapter
+            tvShowAdapter();
         }
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
 
+    }
+
+    public void tvShowAdapter(){
+        mAuth = FirebaseAuth.getInstance();
+        FirebaseUser firebaseUser = mAuth.getCurrentUser();
+        final String uid = firebaseUser.getUid();
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        myRef = firebaseDatabase.getReference().child("Users").child(uid).child("ListOfSubsTvShows");
+        tnshowList = findViewById(R.id.ListView);
+        FirebaseListOptions<TvShowItem> options = new FirebaseListOptions.Builder<TvShowItem>()
+                .setLayout(R.layout.tvshow_list)
+                .setQuery(myRef,TvShowItem.class)
+                .build();
+        adapter = new FirebaseListAdapter(options) {
+            @Override
+            protected void populateView(View v, Object model, int position) {
+                TextView listName = v.findViewById(R.id.listName);
+                TextView listDate = v.findViewById(R.id.listDate);
+                TextView listPlatform = v.findViewById(R.id.listPlatform);
+                ImageView listImage = v.findViewById(R.id.listImage);
+
+                TvShowItem value = (TvShowItem) model;
+                listName.setText(value.getName());
+                listPlatform.setText(value.getTvShowType());
+                listDate.setText("Due: "+value.getReleaseDate());
+                Glide.with(Subs.this).load(value.getImageUrl()).into(listImage);
+            }
+        };
+        gameList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                TvShowItem list = (TvShowItem) parent.getAdapter().getItem(position);
+                Intent intent = new Intent(Subs.this, TvShowDetails.class);
+
+                intent.putExtra("name", list.getName());
+                intent.putExtra("releaseDate", list.getReleaseDate());
+                intent.putExtra("type", list.getTvShowType());
+                intent.putExtra("description", list.getDescription());
+                intent.putExtra("imageURL", list.getImageUrl());
+                startActivity(intent);
+            }
+        });
+
+        gameList.setAdapter(adapter);
+        adapter.startListening();
     }
 
     public void movieAdapter(){
@@ -255,6 +304,11 @@ public class Subs extends AppCompatActivity implements NavigationView.OnNavigati
                 Toast.makeText(this,"sub selected",Toast.LENGTH_SHORT).show();
                 Intent intent5 = new Intent(this,Subs.class);
                 startActivity(intent5);
+                break;
+            case R.id.profile:
+                Toast.makeText(this, "profile selected", Toast.LENGTH_SHORT).show();
+                Intent intent7 = new Intent(this,ProfileActivity.class);
+                startActivity(intent7);
                 break;
             case R.id.logout:
                 Toast.makeText(this, "Loggin out", Toast.LENGTH_SHORT).show();

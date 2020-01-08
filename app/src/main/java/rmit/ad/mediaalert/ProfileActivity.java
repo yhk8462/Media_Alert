@@ -1,63 +1,56 @@
 package rmit.ad.mediaalert;
 
-import android.annotation.SuppressLint;
-import android.content.Intent;
-import android.os.Bundle;
-import android.os.Handler;
-import android.view.Gravity;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.ActionMenuView;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.Toolbar;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
+
+import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.Gravity;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.squareup.picasso.Picasso;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import rmit.ad.mediaalert.tvShows.TvShowActivity;
 
-import static android.os.Build.ID;
-
-public class SubGames extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class ProfileActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
     DrawerLayout drawerLayout;
     ActionBarDrawerToggle toggle;
     NavigationView navigationView;
+    private String password;
+    private String email;
+    private String name;
+    private String phone;
+    private User newUser;
+
     private FirebaseDatabase firebaseDatabase;
-    private DatabaseReference myRef;
-    private GameList gameList;
     private FirebaseAuth mAuth;
-    private String email="";
-    private String key="";
+
     @SuppressLint("RestrictedApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.sub_games);
+        setContentView(R.layout.activity_profile);
 
         drawerLayout = findViewById(R.id.drawer);
         drawerLayout.addDrawerListener(toggle);
         navigationView = findViewById(R.id.navigationView);
         navigationView.setNavigationItemSelectedListener(this);
 
-        final Button button = findViewById(R.id.btnSidebar);
+        Button button = findViewById(R.id.btnSidebar);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -65,47 +58,48 @@ public class SubGames extends AppCompatActivity implements NavigationView.OnNavi
             }
         });
 
-        TextView header = findViewById(R.id.header);
-        TextView gameName = findViewById(R.id.game_name);
-        TextView gameDate = findViewById(R.id.game_date);
-        TextView gameCompany = findViewById(R.id.game_company);
-        TextView gamePlatform = findViewById(R.id.game_platform);
-        TextView gameDes = findViewById(R.id.game_des);
-        ImageView gameImg = findViewById(R.id.game_image);
+        final TextView textViewEmail = findViewById(R.id.textViewEmail);
+        final EditText editTextName = findViewById(R.id.edtName);
+        final EditText editTextPhone = findViewById(R.id.edtPhone);
 
-        //Get data and display ---------------------------------------------------------------------
-        final Intent details = getIntent();
-        final String name = (String) details.getExtras().get("name");
-        String date = (String) details.getExtras().get("date");
-        String company = (String) details.getExtras().get("company");
-        String des = (String) details.getExtras().get("des");
-        String platform = (String) details.getExtras().get("platform");
-        String imageURL = (String) details.getExtras().get("imageURL");
-        final String key = (String) details.getExtras().get("key");
-        gameList = new GameList(name, date, company, platform, des, imageURL);
-
-        header.setText(name);
-        Picasso.with(SubGames.this).load(imageURL).into(gameImg);
-        gameName.setText(name);
-        gameDate.setText("Release Date: " + "\n" + date);
-        gameCompany.setText("Produced by: " + "\n" + company);
-        gamePlatform.setText("Available on: " + "\n" + platform);
-        gameDes.setText(des);
-
-        //UnSub button -------------------------------------------------------------------------
         mAuth = FirebaseAuth.getInstance();
+        FirebaseUser firebaseUser = mAuth.getCurrentUser();
+        final String uid = firebaseUser.getUid();
         firebaseDatabase = FirebaseDatabase.getInstance();
-        myRef = firebaseDatabase.getReference().child("Users");
-        Button button1 = findViewById(R.id.button);
-        button1.setOnClickListener(new View.OnClickListener() {
+
+        firebaseDatabase.getReference().child("Users").child(uid)
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        User user = dataSnapshot.getValue(User.class);
+                        textViewEmail.setText("Email: "+user.getEmail());
+                        editTextName.setText(user.getName());
+                        editTextPhone.setText(user.getPhone());
+                        password = user.getPassword();
+                        email = user.getEmail();
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
+        Button changeProfile = findViewById(R.id.btnChangeProfile);
+        changeProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent sub = new Intent(SubGames.this,Subs.class);
-                startActivity(sub);
-                myRef.child(key).child("ListOfSubsGames").child(name).removeValue();
+                name = editTextName.getText().toString();
+                phone = editTextPhone.getText().toString();
+                newUser = new User(email,password,name,phone);
+                firebaseDatabase.getReference().child("Users").child(uid).child("phone").setValue(phone);
+                firebaseDatabase.getReference().child("Users").child(uid).child("name").setValue(name);
 
             }
         });
+
+
     }
 
     @Override
@@ -149,6 +143,4 @@ public class SubGames extends AppCompatActivity implements NavigationView.OnNavi
         }
         return false;
     }
-
-
 }

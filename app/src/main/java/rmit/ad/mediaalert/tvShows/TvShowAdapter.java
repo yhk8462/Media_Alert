@@ -31,8 +31,8 @@ public class TvShowAdapter extends ArrayAdapter<TvShowItem> {
     }
 
     public static long getDifferenceDays(Date d1, Date d2) {
-        long diff = d2.getTime() - d1.getTime();
-        return TimeUnit.DAYS.convert(diff +1, TimeUnit.MILLISECONDS);
+        long diff = (d2.getTime() - d1.getTime()) + 1;
+        return TimeUnit.DAYS.convert(diff , TimeUnit.MILLISECONDS);
     }
 
     @Override

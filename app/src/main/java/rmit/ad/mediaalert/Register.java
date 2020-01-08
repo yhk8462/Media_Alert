@@ -28,6 +28,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 import java.util.List;
 
+import rmit.ad.mediaalert.notification.SharedPrefManager;
+
 public class Register extends AppCompatActivity {
 
     private final String TAG = "Register";
@@ -90,7 +92,8 @@ public class Register extends AppCompatActivity {
 
 
     private void saveUserInDb(String uuId,String email,String password,String name,String phone) {
-        User user = new User(email,password,name,phone);
+        final String token = SharedPrefManager.getInstance(this).getDeviceToken();
+        User user = new User(email,password,name,phone, token);
         FirebaseDatabase.getInstance().getReference().child("Users").child(uuId).setValue(user);
 
     }

@@ -19,6 +19,14 @@ public class TvShowItem {
         this.tvShowType = tvShowType;
     }
 
+    public TvShowItem(String name, String imageUrl, String description, String releaseDate, String tvShowType) {
+        this.name = name;
+        this.imageUrl = imageUrl;
+        this.description = description;
+        this.releaseDate = releaseDate;
+        this.tvShowType = tvShowType;
+    }
+
     public String getId() {
         return id;
     }
