@@ -186,11 +186,8 @@ public class TvShowDetails extends AppCompatActivity implements NavigationView.O
             @Override
             public void onClick(View v) {
                 // Show success dialog
-                UnSubscribeDialog unSubscribeDialog = new UnSubscribeDialog();
-                Bundle args = new Bundle();
-                args.putString("name", name);
-                unSubscribeDialog.setArguments(args);
-                unSubscribeDialog.show(getSupportFragmentManager(), "Sub");
+                Intent intent5 = new Intent(TvShowDetails.this,Subs.class);
+                startActivity(intent5);
                 unsubscribe.setVisibility(View.GONE);
                 btnSub.setVisibility(View.VISIBLE);
 
