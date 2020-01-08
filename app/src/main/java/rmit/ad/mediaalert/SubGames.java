@@ -136,6 +136,11 @@ public class SubGames extends AppCompatActivity implements NavigationView.OnNavi
                 Intent intent5 = new Intent(this,Subs.class);
                 startActivity(intent5);
                 break;
+            case R.id.profile:
+                Toast.makeText(this, "profile selected", Toast.LENGTH_SHORT).show();
+                Intent intent7 = new Intent(this,ProfileActivity.class);
+                startActivity(intent7);
+                break;
             case R.id.logout:
                 Toast.makeText(this, "Loggin out", Toast.LENGTH_SHORT).show();
                 Intent intent6 = new Intent(this,Login.class);
