@@ -9,6 +9,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.StrictMode;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
@@ -148,6 +149,11 @@ public class MoviesDetailActivity extends AppCompatActivity implements Navigatio
 
                         }
                     }, 5000);
+
+                    if (android.os.Build.VERSION.SDK_INT > 9) {
+                        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+                        StrictMode.setThreadPolicy(policy);
+                    }
 
                     saveInServer(title, releaseDate);
                     SubscribeDialog subscribeDialog = new SubscribeDialog();

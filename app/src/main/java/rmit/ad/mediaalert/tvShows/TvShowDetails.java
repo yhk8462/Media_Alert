@@ -158,13 +158,13 @@ public class TvShowDetails extends AppCompatActivity implements NavigationView.O
                 btnSub.setVisibility(View.GONE);
                 unsubscribe.setVisibility(View.VISIBLE);
 
-                // Save in server
-                saveInServer(name, date);
-
                 if (android.os.Build.VERSION.SDK_INT > 9) {
                     StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
                     StrictMode.setThreadPolicy(policy);
                 }
+
+                // Save in server
+                saveInServer(name, date);
 
                 FirebaseUser firebaseUser = mAuth.getCurrentUser();
                 if (firebaseUser != null) {
