@@ -9,6 +9,7 @@ import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
 
 import rmit.ad.mediaalert.Games;
+import rmit.ad.mediaalert.Login;
 import rmit.ad.mediaalert.MainActivity;
 import rmit.ad.mediaalert.Movies;
 import rmit.ad.mediaalert.R;
@@ -30,14 +31,14 @@ public class AdminHomePage extends AppCompatActivity {
         btnMovie.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent1 = new Intent(AdminHomePage.this, Movies.class);
+                Intent intent1 = new Intent(AdminHomePage.this, AddMovieActivity.class);
                 startActivity(intent1);
             }
         });
         btnGame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent2 = new Intent(AdminHomePage.this, Games.class);
+                Intent intent2 = new Intent(AdminHomePage.this, AddGamesActivity.class);
                 startActivity(intent2);
             }
         });
@@ -51,7 +52,7 @@ public class AdminHomePage extends AppCompatActivity {
         btnSignout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent4 = new Intent(AdminHomePage.this, MainActivity.class);
+                Intent intent4 = new Intent(AdminHomePage.this, Login.class);
                 startActivity(intent4);
             }
         });

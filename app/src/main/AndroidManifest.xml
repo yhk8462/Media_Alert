@@ -42,7 +42,8 @@
         <activity android:name=".UnSubscribeDialog" />
         <activity android:name=".SubscribeDialog" />
         <activity android:name=".SubGames" />
-
+        <activity android:name=".admin.AddGamesActivity"/>
+        <activity android:name=".admin.AddMovieActivity" />
 
         <service
             android:name=".notification.MyFirebaseInstanceIDService">
