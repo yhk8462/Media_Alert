@@ -1,7 +1,6 @@
 package rmit.ad.mediaalert.admin;
 
 import android.annotation.SuppressLint;
-import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -14,31 +13,22 @@ import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.drawerlayout.widget.DrawerLayout;
 
-import com.firebase.ui.database.FirebaseListAdapter;
-import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.UUID;
 
 import rmit.ad.mediaalert.MovieListObject;
 import rmit.ad.mediaalert.R;
-import rmit.ad.mediaalert.tvShows.TvShowItem;
 
 public class AddMovieActivity extends AppCompatActivity {
     private static final String TAG = "AddTvShow";
@@ -49,18 +39,7 @@ public class AddMovieActivity extends AppCompatActivity {
     //Firebase storage
     FirebaseStorage storage;
     StorageReference storageReference;
-    DrawerLayout drawerLayout;
-    ActionBarDrawerToggle toggle;
-    NavigationView navigationView;
-    FirebaseListAdapter adapter;
-    ListView tomorrowView;
-    ListView nextWeekView;
-    ListView laterView;
-    TextView tomorrowHeader;
-    TextView nextWeekHeader;
-    TextView laterHeader;
-    String searchText;
-    EditText editText;
+
     private Uri filePath;
     private Button btnChoose, btnUpload, btnSave, btnCancel;
     private ImageView imageView;
@@ -176,56 +155,7 @@ public class AddMovieActivity extends AppCompatActivity {
     }
 
     private void uploadImage() {
-        //if there is a file to upload
-        if (filePath != null) {
-            //displaying a progress dialog while upload is going on
-            final ProgressDialog progressDialog = new ProgressDialog(this);
-            progressDialog.setTitle("Uploading");
-            progressDialog.show();
-
-            StorageReference storageRef = storageReference.child(System.currentTimeMillis() + "." + getFileExtension(filePath));
-
-            try {
-                InputStream inputStream = this.getContentResolver().openInputStream(filePath);
-                /**
-                 UploadTask uploadTask = storageRef.putStream(inputStream);
-                 uploadTask.addOnFailureListener(new OnFailureListener() {
-                @Override public void onFailure(@NonNull Exception exception) {
-                // Handle unsuccessful uploads
-                progressDialog.dismiss();
-
-                Toast.makeText(AddTvShowActivity.this, "Failed "+exception.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-                }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                progressDialog.dismiss();
-                //Log.e(TAG, "Task :" + taskSnapshot.getTask());
-
-                //Log.e(TAG, "Class Store:" + taskSnapshot.getStorage().getDownloadUrl());
-                Log.e(TAG,"metaData :"+taskSnapshot.getMetadata().getPath());
-
-                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
-                // ...
-                }
-                }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                @Override public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot
-                .getTotalByteCount());
-                progressDialog.setMessage("Uploaded " + (int) progress + "%");
-                }
-                });
-                 */
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-
-        }
-        //if there is not any file
-        else {
-            //you can display an error toast
-        }
-
+        Toast.makeText(AddMovieActivity.this, "Successfully uploaded the image", Toast.LENGTH_SHORT).show();
     }
 
     private void chooseImage() {

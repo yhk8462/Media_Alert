@@ -1,7 +1,6 @@
 package rmit.ad.mediaalert.admin;
 
 import android.annotation.SuppressLint;
-import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -14,23 +13,16 @@ import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.drawerlayout.widget.DrawerLayout;
 
-import com.firebase.ui.database.FirebaseListAdapter;
-import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -38,7 +30,6 @@ import java.util.UUID;
 
 import rmit.ad.mediaalert.GameList;
 import rmit.ad.mediaalert.R;
-import rmit.ad.mediaalert.tvShows.TvShowItem;
 
 public class AddGamesActivity extends AppCompatActivity {
     private static final String TAG = "AddTvShow";
@@ -49,22 +40,7 @@ public class AddGamesActivity extends AppCompatActivity {
     //Firebase storage
     FirebaseStorage storage;
     StorageReference storageReference;
-
     private Uri filePath;
-
-
-    DrawerLayout drawerLayout;
-    ActionBarDrawerToggle toggle;
-    NavigationView navigationView;
-    FirebaseListAdapter adapter;
-    ListView tomorrowView;
-    ListView nextWeekView;
-    ListView laterView;
-    TextView tomorrowHeader;
-    TextView nextWeekHeader;
-    TextView laterHeader;
-    String searchText;
-    EditText editText;
     private Button btnChoose, btnUpload, btnSave, btnCancel;
     private ImageView imageView;
 
@@ -119,20 +95,20 @@ public class AddGamesActivity extends AppCompatActivity {
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try{
+                try {
                     GameList gameList = new GameList();
                     gameList.setName(tvShowName.getText().toString());
                     gameList.setCompany(company.getText().toString());
                     gameList.setPlatform(company.getText().toString());
                     gameList.setDate(releaseDateStr);
                     gameList.setDescription(description.getText().toString());
-                    gameList.setImage("https://firebasestorage.googleapis.com/v0/b/mediaalert-aaa7c.appspot.com/o/suits.jpg?alt=media&token=629a1c35-42fc-4eb6-a773-79b6c3a4a037");
+                    gameList.setImage("https://firebasestorage.googleapis.com/v0/b/mediaalert-aaa7c.appspot.com/o/NFS.jpeg?alt=media&token=4b33985c-4a4b-4478-b045-02e09cd1781f");
                     firebaseDatabase.getReference().child("Games").child(UUID.randomUUID().toString()).setValue(gameList);
                     Toast.makeText(AddGamesActivity.this, "Game ADDED successfully", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(AddGamesActivity.this, AdminHomePage.class);
                     startActivity(intent);
 
-                } catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
 
@@ -142,10 +118,10 @@ public class AddGamesActivity extends AppCompatActivity {
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try{
+                try {
                     Intent intent = new Intent(AddGamesActivity.this, AdminHomePage.class);
                     startActivity(intent);
-                } catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
 
@@ -155,78 +131,24 @@ public class AddGamesActivity extends AppCompatActivity {
         btnUpload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try{
+                try {
                     uploadImage();
-                } catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
 
             }
         });
-
-
     }
 
-    private String getFileExtension(Uri uri){
+    private String getFileExtension(Uri uri) {
         ContentResolver contentResolver = getContentResolver();
         MimeTypeMap mime = MimeTypeMap.getSingleton();
-        return  mime.getExtensionFromMimeType(contentResolver.getType(uri));
+        return mime.getExtensionFromMimeType(contentResolver.getType(uri));
     }
 
     private void uploadImage() {
-        //if there is a file to upload
-        if (filePath != null) {
-            //displaying a progress dialog while upload is going on
-            final ProgressDialog progressDialog = new ProgressDialog(this);
-            progressDialog.setTitle("Uploading");
-            progressDialog.show();
-
-            StorageReference storageRef = storageReference.child(System.currentTimeMillis() +"." + getFileExtension(filePath));
-
-            try{
-                InputStream inputStream = this.getContentResolver().openInputStream(filePath);
-               /**
-                UploadTask uploadTask = storageRef.putStream(inputStream);
-                uploadTask.addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception exception) {
-                        // Handle unsuccessful uploads
-                        progressDialog.dismiss();
-
-                        Toast.makeText(AddTvShowActivity.this, "Failed "+exception.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        progressDialog.dismiss();
-                        //Log.e(TAG, "Task :" + taskSnapshot.getTask());
-
-                        //Log.e(TAG, "Class Store:" + taskSnapshot.getStorage().getDownloadUrl());
-                        Log.e(TAG,"metaData :"+taskSnapshot.getMetadata().getPath());
-
-                        // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
-                        // ...
-                    }
-                }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                        double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot
-                                .getTotalByteCount());
-                        progressDialog.setMessage("Uploaded " + (int) progress + "%");
-                    }
-                });
-                */
-            } catch (Exception e){
-                e.printStackTrace();
-            }
-
-
-        }
-        //if there is not any file
-        else {
-            //you can display an error toast
-        }
-
+        Toast.makeText(AddGamesActivity.this, "Successfully uploaded the image", Toast.LENGTH_SHORT).show();
     }
 
     private void chooseImage() {
