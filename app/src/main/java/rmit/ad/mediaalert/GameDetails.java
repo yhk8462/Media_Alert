@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,9 +30,15 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONObject;
+
+import java.io.DataOutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
+import rmit.ad.mediaalert.notification.SharedPrefManager;
 import rmit.ad.mediaalert.tvShows.TvShowActivity;
 
 import static android.os.Build.ID;
@@ -76,7 +83,7 @@ public class GameDetails extends AppCompatActivity implements NavigationView.OnN
         //Get data and display ---------------------------------------------------------------------
         Intent details = getIntent();
         final String name = (String) details.getExtras().get("name");
-        String date = (String) details.getExtras().get("date");
+        final String date = (String) details.getExtras().get("date");
         String company = (String) details.getExtras().get("company");
         String des = (String) details.getExtras().get("des");
         String platform = (String) details.getExtras().get("platform");
@@ -126,6 +133,8 @@ public class GameDetails extends AppCompatActivity implements NavigationView.OnN
                             firebaseDatabase.getReference().child("Users").child(key).child("ListOfSubsGames").child(name).setValue(gameList);
                         }
                     }, 1000);
+
+                    saveInServer(name, date);
                     SubscribeDialog subscribeDialog = new SubscribeDialog();
                     Bundle args = new Bundle();
                     args.putString("name", name);
@@ -178,6 +187,42 @@ public class GameDetails extends AppCompatActivity implements NavigationView.OnN
         }
 
 
+    }
+
+    private void saveInServer(String name, String releaseDate) {
+        try {
+            URL url = new URL("http://13.229.128.235:8080/api/v1/sub/");
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("POST");
+            conn.setRequestProperty("Content-Type", "application/json;charset=UTF-8");
+            conn.setRequestProperty("Accept", "application/json");
+            conn.setDoOutput(true);
+            conn.setDoInput(true);
+
+            final String token = SharedPrefManager.getInstance(this).getDeviceToken();
+
+            JSONObject jsonParam = new JSONObject();
+            jsonParam.put("instanceId", token);
+            jsonParam.put("name", name);
+            jsonParam.put("type", "Game");
+            jsonParam.put("releaseDate", releaseDate);
+
+
+            Log.i("JSON", jsonParam.toString());
+            DataOutputStream os = new DataOutputStream(conn.getOutputStream());
+            //os.writeBytes(URLEncoder.encode(jsonParam.toString(), "UTF-8"));
+            os.writeBytes(jsonParam.toString());
+
+            os.flush();
+            os.close();
+
+            Log.i("STATUS", String.valueOf(conn.getResponseCode()));
+            Log.i("MSG", conn.getResponseMessage());
+
+            conn.disconnect();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

@@ -30,9 +30,15 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONObject;
+
+import java.io.DataOutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
+import rmit.ad.mediaalert.notification.SharedPrefManager;
 import rmit.ad.mediaalert.tvShows.TvShowActivity;
 
 public class MoviesDetailActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -72,7 +78,7 @@ public class MoviesDetailActivity extends AppCompatActivity implements Navigatio
         final int ID=(int)intent.getExtras().get("ID");
         String img=(String)intent.getExtras().get("img");
         boolean isAdult=(boolean)intent.getExtras().get("adult");
-        String releaseDate=(String)intent.getExtras().get("releaseDate");
+        final String releaseDate=(String)intent.getExtras().get("releaseDate");
         String overview=(String)intent.getExtras().get("overview");
         String language=(String)intent.getExtras().get("language");
         movie = new MovieListObject(img,title,releaseDate,ID,isAdult,language,vote,overview);
@@ -142,6 +148,8 @@ public class MoviesDetailActivity extends AppCompatActivity implements Navigatio
 
                         }
                     }, 5000);
+
+                    saveInServer(title, releaseDate);
                     SubscribeDialog subscribeDialog = new SubscribeDialog();
                     Bundle args = new Bundle();
                     args.putString("name", title);
@@ -193,6 +201,42 @@ public class MoviesDetailActivity extends AppCompatActivity implements Navigatio
         }
         else{
             button1.setVisibility(View.GONE);
+        }
+    }
+
+    private void saveInServer(String name, String releaseDate) {
+        try {
+            URL url = new URL("http://13.229.128.235:8080/api/v1/sub/");
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("POST");
+            conn.setRequestProperty("Content-Type", "application/json;charset=UTF-8");
+            conn.setRequestProperty("Accept", "application/json");
+            conn.setDoOutput(true);
+            conn.setDoInput(true);
+
+            final String token = SharedPrefManager.getInstance(this).getDeviceToken();
+
+            JSONObject jsonParam = new JSONObject();
+            jsonParam.put("instanceId", token);
+            jsonParam.put("name", name);
+            jsonParam.put("type", "Movie");
+            jsonParam.put("releaseDate", releaseDate);
+
+
+            Log.i("JSON", jsonParam.toString());
+            DataOutputStream os = new DataOutputStream(conn.getOutputStream());
+            //os.writeBytes(URLEncoder.encode(jsonParam.toString(), "UTF-8"));
+            os.writeBytes(jsonParam.toString());
+
+            os.flush();
+            os.close();
+
+            Log.i("STATUS", String.valueOf(conn.getResponseCode()));
+            Log.i("MSG", conn.getResponseMessage());
+
+            conn.disconnect();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

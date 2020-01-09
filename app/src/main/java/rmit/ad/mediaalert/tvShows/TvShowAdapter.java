@@ -31,7 +31,7 @@ public class TvShowAdapter extends ArrayAdapter<TvShowItem> {
     }
 
     public static long getDifferenceDays(Date d1, Date d2) {
-        long diff = (d2.getTime() - d1.getTime()) + 1;
+        long diff = (d2.getTime() - d1.getTime());
         return TimeUnit.DAYS.convert(diff , TimeUnit.MILLISECONDS);
     }
 
@@ -63,7 +63,8 @@ public class TvShowAdapter extends ArrayAdapter<TvShowItem> {
         } catch (Exception ex) {
             Log.d("TVshowListElement", "Exception occurred while parsing the date");
         }
-        days.setText(String.valueOf(getDifferenceDays(new Date(), relDate)));
+        int noOfDays = (int)getDifferenceDays(new Date(), relDate) + 1;
+        days.setText(String.valueOf(noOfDays));
 
         tvShowListView.setOnClickListener(
                 new View.OnClickListener() {
