@@ -34,7 +34,7 @@ public class Register extends AppCompatActivity {
 
     private final String TAG = "Register";
     private FirebaseAuth mAuth;
-    EditText name, email, password, phone;
+    EditText name, email, password, phone, password2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,8 +49,10 @@ public class Register extends AppCompatActivity {
         password = findViewById(R.id.edtPassword);
         email = findViewById(R.id.edtEmail);
         phone = findViewById(R.id.edtPhone);
+        password2 = findViewById(R.id.edtPassword2);
         final String strName = name.getText().toString();
         final String strPassword = password.getText().toString();
+        final String strPassword2 = password2.getText().toString();
         final String strEmail = email.getText().toString();
         final String strPhone = phone.getText().toString();
 
@@ -63,6 +65,9 @@ public class Register extends AppCompatActivity {
         if(strPassword.isEmpty()){
             password.setError("Error no input");
         }
+        if(strPassword2.isEmpty()){
+            password2.setError("Error no input");
+        }
         if(strPhone.isEmpty()){
             phone.setError("Error no input");
         }
@@ -70,20 +75,35 @@ public class Register extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(name.getText().toString().isEmpty()){
+                    Toast.makeText(Register.this, "Please input all fields", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 if(email.getText().toString().isEmpty()){
+                    Toast.makeText(Register.this, "Please input all fields", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 if(password.getText().toString().isEmpty()){
+                    Toast.makeText(Register.this, "Please input all fields", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if(password2.getText().toString().isEmpty()){
+                    Toast.makeText(Register.this, "Please input all fields", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 if(phone.getText().toString().isEmpty()){
+                    Toast.makeText(Register.this, "Please input all fields", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                create(); //Email and password auth
-                Toast.makeText(Register.this, "Account Created", Toast.LENGTH_SHORT).show();
+                if(password.getText().toString().equals(password2.getText().toString())){
+                    create(); //Email and password auth
+                    Toast.makeText(Register.this, "Account Created", Toast.LENGTH_SHORT).show();
+                } else if(!password.getText().toString().equals(password2.getText().toString())) {
+                    Toast.makeText(Register.this,"Password Not matching",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+
 
 
             }
