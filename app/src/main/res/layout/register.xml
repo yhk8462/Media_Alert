@@ -51,7 +51,7 @@
             android:ems="10"
             android:hint="Email"
             android:inputType="textEmailAddress"
-
+            android:textColor="#FFF"
             android:textSize="20dp" />
 
         <EditText
@@ -65,6 +65,23 @@
             android:textColorHint="#FFF"
             android:ems="10"
             android:hint="Password"
+            android:textColor="#FFF"
+            android:inputType="textPassword"
+            android:textSize="20dp" />
+
+        <EditText
+            android:id="@+id/edtPassword2"
+            android:layout_width="380dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="20dp"
+            android:background="#11000000"
+            android:drawableLeft="@drawable/lock"
+            android:paddingLeft="10dp"
+            android:textColorHint="#FFF"
+            android:ems="10"
+            android:textColor="#FFF"
+
+            android:hint="Confirm Password"
             android:inputType="textPassword"
             android:textSize="20dp" />
 
@@ -76,6 +93,8 @@
             android:background="#11000000"
             android:drawableLeft="@drawable/name"
             android:paddingLeft="10dp"
+            android:textColor="#FFF"
+
             android:textColorHint="#FFF"
             android:ems="10"
             android:hint="Name"
@@ -89,6 +108,8 @@
             android:background="#11000000"
             android:drawableLeft="@drawable/phone"
             android:paddingLeft="10dp"
+            android:textColor="#FFF"
+
             android:textColorHint="#FFF"
             android:ems="10"
             android:hint="Phone Number"
