@@ -8,36 +8,27 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.firebase.ui.database.FirebaseListAdapter;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
@@ -45,24 +36,19 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
 
-import rmit.ad.mediaalert.MainActivity;
+import rmit.ad.mediaalert.MovieListObject;
 import rmit.ad.mediaalert.R;
-import rmit.ad.mediaalert.Register;
 import rmit.ad.mediaalert.tvShows.TvShowItem;
 
-public class AddTvShowActivity extends AppCompatActivity {
+public class AddMovieActivity extends AppCompatActivity {
     private static final String TAG = "AddTvShow";
     private final int PICK_IMAGE_REQUEST = 71;
-    EditText tvShowName, type, description;
+    EditText tvShowName, language, description, average;
     CalendarView releaseDate;
     String releaseDateStr;
     //Firebase storage
     FirebaseStorage storage;
     StorageReference storageReference;
-
-    private Uri filePath;
-
-
     DrawerLayout drawerLayout;
     ActionBarDrawerToggle toggle;
     NavigationView navigationView;
@@ -75,6 +61,7 @@ public class AddTvShowActivity extends AppCompatActivity {
     TextView laterHeader;
     String searchText;
     EditText editText;
+    private Uri filePath;
     private Button btnChoose, btnUpload, btnSave, btnCancel;
     private ImageView imageView;
 
@@ -85,12 +72,12 @@ public class AddTvShowActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.add_tv_show_activity);
+        setContentView(R.layout.add_movie_activity);
 
         tvShowName = findViewById(R.id.tvShowName);
-        type = findViewById(R.id.type);
+        language = findViewById(R.id.language);
         description = findViewById(R.id.description);
-
+        average = findViewById(R.id.average);
         releaseDate = findViewById(R.id.releaseDate);
 
         releaseDate.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
@@ -129,20 +116,25 @@ public class AddTvShowActivity extends AppCompatActivity {
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try{
-                    TvShowItem tvShowItem = new TvShowItem();
-                    tvShowItem.setDescription(description.getText().toString());
-                    tvShowItem.setName(tvShowName.getText().toString());
-                    tvShowItem.setReleaseDate(releaseDateStr);
-                    tvShowItem.setTvShowType(type.getText().toString());
-                    tvShowItem.setImageUrl("https://firebasestorage.googleapis.com/v0/b/mediaalert-aaa7c.appspot.com/o/suits.jpg?alt=media&token=629a1c35-42fc-4eb6-a773-79b6c3a4a037");
-                    firebaseDatabase.getReference().child("TvShows").child(UUID.randomUUID().toString()).setValue(tvShowItem);
-                    Toast.makeText(AddTvShowActivity.this, "TV show addded successfully", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(AddTvShowActivity.this, AdminHomePage.class);
+                try {
+
+                    MovieListObject movieListObject = new MovieListObject();
+                    movieListObject.setAdult(false);
+                    movieListObject.setOriginalTitle(tvShowName.getText().toString());
+                    movieListObject.setOverview(description.getText().toString());
+                    movieListObject.setOriginalLanguage(language.getText().toString());
+                    movieListObject.setVoteAverage(Double.valueOf(average.getText().toString()));
+
+                    long ID = new Date().getTime();
+                    movieListObject.setNumberID((int) ID);
+                    movieListObject.setReleaseDate(releaseDateStr);
+
+                    movieListObject.setImgURL("/wwqD3P2SD9dx9xouisQyjKOCX3Y.jpg");
+                    firebaseDatabase.getReference().child("Movies").child(String.valueOf(ID)).setValue(movieListObject);
+                    Toast.makeText(AddMovieActivity.this, "Movie added successfully", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(AddMovieActivity.this, AdminHomePage.class);
                     startActivity(intent);
-
-
-                } catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
 
@@ -152,10 +144,10 @@ public class AddTvShowActivity extends AppCompatActivity {
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try{
-                    Intent intent = new Intent(AddTvShowActivity.this, AdminHomePage.class);
+                try {
+                    Intent intent = new Intent(AddMovieActivity.this, AdminHomePage.class);
                     startActivity(intent);
-                } catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
 
@@ -165,9 +157,9 @@ public class AddTvShowActivity extends AppCompatActivity {
         btnUpload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try{
+                try {
                     uploadImage();
-                } catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
 
@@ -177,10 +169,10 @@ public class AddTvShowActivity extends AppCompatActivity {
 
     }
 
-    private String getFileExtension(Uri uri){
+    private String getFileExtension(Uri uri) {
         ContentResolver contentResolver = getContentResolver();
         MimeTypeMap mime = MimeTypeMap.getSingleton();
-        return  mime.getExtensionFromMimeType(contentResolver.getType(uri));
+        return mime.getExtensionFromMimeType(contentResolver.getType(uri));
     }
 
     private void uploadImage() {
@@ -191,42 +183,39 @@ public class AddTvShowActivity extends AppCompatActivity {
             progressDialog.setTitle("Uploading");
             progressDialog.show();
 
-            StorageReference storageRef = storageReference.child(System.currentTimeMillis() +"." + getFileExtension(filePath));
+            StorageReference storageRef = storageReference.child(System.currentTimeMillis() + "." + getFileExtension(filePath));
 
-            try{
+            try {
                 InputStream inputStream = this.getContentResolver().openInputStream(filePath);
-               /**
-                UploadTask uploadTask = storageRef.putStream(inputStream);
-                uploadTask.addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception exception) {
-                        // Handle unsuccessful uploads
-                        progressDialog.dismiss();
+                /**
+                 UploadTask uploadTask = storageRef.putStream(inputStream);
+                 uploadTask.addOnFailureListener(new OnFailureListener() {
+                @Override public void onFailure(@NonNull Exception exception) {
+                // Handle unsuccessful uploads
+                progressDialog.dismiss();
 
-                        Toast.makeText(AddTvShowActivity.this, "Failed "+exception.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
+                Toast.makeText(AddTvShowActivity.this, "Failed "+exception.getMessage(), Toast.LENGTH_SHORT).show();
+                }
                 }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        progressDialog.dismiss();
-                        //Log.e(TAG, "Task :" + taskSnapshot.getTask());
+                @Override public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                progressDialog.dismiss();
+                //Log.e(TAG, "Task :" + taskSnapshot.getTask());
 
-                        //Log.e(TAG, "Class Store:" + taskSnapshot.getStorage().getDownloadUrl());
-                        Log.e(TAG,"metaData :"+taskSnapshot.getMetadata().getPath());
+                //Log.e(TAG, "Class Store:" + taskSnapshot.getStorage().getDownloadUrl());
+                Log.e(TAG,"metaData :"+taskSnapshot.getMetadata().getPath());
 
-                        // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
-                        // ...
-                    }
+                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
+                // ...
+                }
                 }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                        double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot
-                                .getTotalByteCount());
-                        progressDialog.setMessage("Uploaded " + (int) progress + "%");
-                    }
+                @Override public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot
+                .getTotalByteCount());
+                progressDialog.setMessage("Uploaded " + (int) progress + "%");
+                }
                 });
-                */
-            } catch (Exception e){
+                 */
+            } catch (Exception e) {
                 e.printStackTrace();
             }
 

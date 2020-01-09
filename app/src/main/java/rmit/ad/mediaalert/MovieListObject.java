@@ -10,6 +10,8 @@ public class MovieListObject {
     protected double voteAverage;
     protected String overview;
 
+    public MovieListObject(){}
+
 
     public MovieListObject(String imgURL, String originalTitle, String releaseDate) {
         this.imgURL = imgURL;
